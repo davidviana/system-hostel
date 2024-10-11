@@ -1,0 +1,58 @@
+/* App.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    font-family: 'Poppins';
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.navbar {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: 40px;
+    align-items: center;
+    position: absolute;
+    z-index: 3;
+}
+
+.navbar .navbar-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 80%;
+    color: #fff;
+}
+
+.button-login {
+    width: 150px;
+    height: 35px;
+    border: none;
+    border-radius: 40px;
+    background-color: #7A2388;
+    color: #fff;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.button-login > a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+
+.button-login:hover {
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+    background-color: #fff; 
+}
+
+.button-login:hover > a {
+    transition: color 0.3s ease-in-out;
+    color: #7A2388;
+}

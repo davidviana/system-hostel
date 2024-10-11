@@ -1,0 +1,28 @@
+.footer {
+    background-color: black;
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.footer-content p {
+    margin: 10px 0;
+}
+
+.footer-information > p:nth-child(1) {
+    font-weight: 700;
+    font-size: 21px;
+}
+
+.footer-information > p:nth-child(2) {
+    width: 300px;
+    color: #CCCCCC;
+    font-weight: 400;
+    font-size: 11px;
+}

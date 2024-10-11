@@ -1,0 +1,218 @@
+/* App.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    font-family: 'Poppins';
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.header {
+    position: relative; 
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-image: url('../../assets/header_background.png');
+    background-size: cover;
+    padding: 50px;
+    text-align: center;
+    color: white;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.navbar {
+    margin-top: 10px;
+}
+
+.header-text {
+    position: relative;
+    z-index: 2;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    align-items: center;
+    max-width: 1200px;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    color: #ffffff;
+    line-height: 0;
+}
+
+.header-text > h1 {
+    font-size: 100px;
+    font-weight: 500;
+}
+
+.header-text > p {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+#header-span {
+    height: 50px;
+    border-left: 4px solid #7A2388;
+    padding: 0 10px;
+}
+
+.container-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.container-register-form {
+    width: 50%;
+    z-index: 2;
+}
+
+.register-form {
+    background-color: #ffffffcc;
+    width: 80%;
+    padding: 0 20px;
+    border-radius: 10px;
+    display: inline-block;
+    text-align: left;
+    color: black;
+}
+
+.register-form form input {
+    width: 95%;
+    padding: 8px 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.register-form form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #9400d3;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    font-weight: 500;
+}
+
+.register-form form button:hover {
+    transition: background-color 0.3s ease-in-out;
+    background-color: #ffffff;
+    font-weight: 500;
+    color: #bb19db;
+}
+
+.register-form a {
+    text-decoration: none;
+    color: #9400b1;
+}
+
+.gallery {
+    padding: 50px;
+    text-align: center;
+}
+
+.gallery-images {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.gallery-images img {
+    width: 200px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.banner {
+    background-image: url('../../assets/header_background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: white;
+    padding: 50px;
+    text-align: center;
+}
+
+.banner > button {
+    width: 200px;
+    height: 50px;
+    border: none;
+    border-radius: 64px;
+    background-color: #ffffff;
+    color: #9400b1;
+    font-size: 18px;
+    font-weight: 700;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.banner > button:hover {
+    transition: background-color 0.3s ease-in-out;
+    background-color: #9400b1;
+    color: #ffffff;
+}
+
+
+.accommodations {
+    padding: 50px;
+    text-align: center;
+    background-color: #f7f7f7;
+}
+
+.accommodations > h2{
+    font-size: 56px;
+}
+
+.room {
+    display: inline-block;
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.room h3 {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.room img {
+    width: 300px;
+}
+
+.room p {
+    color: #9400b1;
+} 
+
+.room span {
+    font-size: 28px;
+}
