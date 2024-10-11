@@ -30,6 +30,11 @@ body {
     color: #fff;
 }
 
+.navbar .navbar-container a {
+    text-decoration: none;
+    color: #fff;
+}
+
 .button-login {
     width: 150px;
     height: 35px;
