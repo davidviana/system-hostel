@@ -1,4 +1,3 @@
-// App.js
 import { useState } from "react";
 import InputMask from 'react-input-mask';
 import "./cadaster.css";
@@ -9,10 +8,52 @@ function CadasterPage() {
     const [document, setDocument] = useState('');
     const [telefone, setTelefone] = useState('');
     const [senha, setSenha] = useState('');
+    const [formErrors, setFormErrors] = useState('');
+
+    const validateName = (e) => {
+        const input = e.target;
+        const value = input.value;
+        const regex = /^[a-zA-Z\s]+$/;
+
+        if (!regex.test(value)) {
+            input.classList.add('error'); 
+        } else {
+            input.classList.remove('error');
+        }
+    }
+
+    const validateEmail = (e) => {
+        const input = e.target;
+        const value = input.value;
+
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!regex.test(value)) {
+            input.classList.add('error');
+        } else {
+            input.classList.remove('error');
+        }
+    }
+
+    const validatePassword = (value) => {
+        return value.length >= 8;
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!nome || !email || !document || !telefone || !senha) {
+            setFormErrors('Todos os campos devem ser preenchidos.');
+            return;
+        }
+
+        if (!validatePassword(senha)) {
+            setFormErrors('A senha deve ter pelo menos 8 caracteres.');
+            return;
+        }
+
+        setFormErrors('');
+        
         const response = await fetch('http://localhost:3001/api/cliente', {
             method: 'POST',
             headers: {
@@ -39,10 +80,10 @@ function CadasterPage() {
             <header className="header">
                 <div className="header-content">
                     <div className="header-text">
-                        <h1>Hotel BR</h1>
+                        <h1>Hostel BR</h1>
                         <h1>Bom Retiro</h1>
                         <span id="header-span">
-                            <p>Venha conhecer o Hotel BR - Bom Retiro</p>
+                            <p>Venha conhecer o Hostel BR - Bom Retiro</p>
                             <span>Economia e qualidade no mesmo lugar</span>
                         </span>
                     </div>
@@ -50,12 +91,15 @@ function CadasterPage() {
                         <div className="register-form">
                             <h2>Cadastre-se</h2>
                             <form onSubmit={handleSubmit}>
+                                {formErrors && <p className="error">{formErrors}</p>}
                                 <label>Nome</label>
                                 <input
                                     type="text"
                                     placeholder="Digite seu nome"
                                     value={nome}
+                                    maxLength={100}
                                     onChange={(e) => setNome(e.target.value)}
+                                    onBlur={(e) => validateName(e)}
                                     required
                                 />
                                 <label>
@@ -77,6 +121,7 @@ function CadasterPage() {
                                     placeholder="Digite seu e-mail"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
+                                    onBlur={(e) => validateEmail(e)}
                                     required
                                 />
                                 <label>

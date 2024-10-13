@@ -50,38 +50,12 @@ function LoginPage() {
             <header className="header">
                 <div className="header-content">
                     <div className="header-text">
-                        <h1>Hotel BR</h1>
-                        <h1>Bom Retiro</h1>
-                        <span id="header-span">
-                            <p>Venha conhecer o Hotel BR - Bom Retiro</p>
-                            <span>Economia e qualidade no mesmo lugar</span>
-                        </span>
+                        <h1>Hostel BR - Bom Retiro</h1>
                     </div>
                     <div className="container-register-form">
                         <div className="register-form">
-                            <h2>Cadastre-se</h2>
+                            <h2>Login</h2>
                             <form onSubmit={handleSubmit}>
-                                <label>Nome</label>
-                                <input
-                                    type="text"
-                                    placeholder="Digite seu nome"
-                                    value={nome}
-                                    onChange={(e) => setNome(e.target.value)}
-                                    required
-                                />
-                                <label>
-                                    CPF:
-                                    <InputMask
-                                        mask="999.999.999-99"
-                                        placeholder="Digite seu CPF"
-                                        value={document}
-                                        onChange={(e) => setDocument(e.target.value)}
-                                        required
-                                    >
-                                        {(inputProps) => <input {...inputProps} />}
-                                    </InputMask>
-                                </label>
-
                                 <label>E-mail</label>
                                 <input
                                     type="email"
@@ -90,18 +64,6 @@ function LoginPage() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
                                 />
-                                <label>
-                                    Telefone:
-                                    <InputMask
-                                        mask="(99) 99999-9999"
-                                        placeholder='Digite o seu telefone'
-                                        value={telefone}
-                                        onChange={(e) => setTelefone(e.target.value)}
-                                        required
-                                    >
-                                        {(inputProps) => <input {...inputProps} />}
-                                    </InputMask>
-                                </label>
                                 <label>Senha</label>
                                 <input
                                     type="password"
@@ -110,10 +72,10 @@ function LoginPage() {
                                     onChange={(e) => setSenha(e.target.value)}
                                     required
                                 />
-                                <button type="submit">Cadastrar</button>
+                                <button type="submit">Entrar</button>
                             </form>
                             <p>
-                                Já possui conta? <a href="/login">Faça Login</a>
+                                Ainda não possui conta? <a href="/login">Cadastrar-se</a>
                             </p>
                         </div>
                     </div>

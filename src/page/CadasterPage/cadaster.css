@@ -152,3 +152,8 @@ body {
 #text-login:hover::after {
     transform: scaleX(1); /* Expande o sublinhado ao passar o mouse */
 }
+
+.error {
+    outline: 1px solid red;
+    color: red;
+}

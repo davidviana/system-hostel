@@ -1,15 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-// import App from './App';
-import CadasterPage from './page/CadasterPage/cadaster';
-import Login from './page/LoginPage/login';
+// import CadasterPage from './page/CadasterPage/cadaster';
+import LoginPage from './page/LoginPage/login';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <CadasterPage />
+    <LoginPage />
   </React.StrictMode>
 );
 
