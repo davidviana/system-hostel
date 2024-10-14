@@ -12,7 +12,7 @@ body {
     overflow-x: hidden;
 }
 
-.header {
+.login-header {
     position: relative; 
     display: flex;
     flex-direction: row;
@@ -24,7 +24,7 @@ body {
     color: white;
 }
 
-.header::before {
+.login-header::before {
     content: '';
     position: absolute;
     top: 0;
@@ -35,16 +35,16 @@ body {
     z-index: 1;
 }
 
-.navbar {
+.login-navbar {
     margin-top: 10px;
 }
 
-.header-text {
+.login-header-text {
     position: relative;
     z-index: 2;
 }
 
-.header-content {
+.login-header-content {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -55,7 +55,7 @@ body {
     margin-top: 15px;
 }
 
-.header-text {
+.login-header-text {
     display: flex;
     flex-direction: column;
     text-align: left;
@@ -63,12 +63,12 @@ body {
     line-height: 0;
 }
 
-.header-text > h1 {
+.login-header-text > h1 {
     font-size: 100px;
     font-weight: 500;
 }
 
-.header-text > p {
+.login-header-text > p {
     font-size: 24px;
     font-weight: 600;
 }
@@ -79,18 +79,18 @@ body {
     padding: 0 10px;
 }
 
-.container-header {
+.login-container-header {
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
 
-.container-register-form {
+.login-container-register-form {
     width: 50%;
     z-index: 2;
 }
 
-.register-form {
+.login-register-form {
     background-color: #ffffffcc;
     width: 80%;
     padding: 0 20px;
@@ -100,7 +100,7 @@ body {
     color: black;
 }
 
-.register-form form input {
+.login-register-form form input {
     width: 95%;
     padding: 8px 10px;
     margin: 5px 0;
@@ -108,7 +108,7 @@ body {
     border: 1px solid #ccc;
 }
 
-.register-form form button {
+.login-register-form form button {
     align-items: center;
     width: 50%;
     margin-top: 10px;
@@ -122,38 +122,38 @@ body {
     transition: background-color 0.3s ease-in-out;
 }
 
-.register-form form button:hover {
+.login-register-form form button:hover {
     transition: background-color 0.1s ease-in-out;
     background-color: #ffffff;
     font-weight: 500;
     color: #bb19db;
 }
 
-.register-form a {
+.login-register-form a {
     text-decoration: none;
     color: #9400b1;
 }
 
-.gallery {
+.login-gallery {
     padding: 50px;
     text-align: center;
 }
 
-.gallery-images {
+.login-gallery-images {
     display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
 }
 
-.gallery-images img {
+.login-gallery-images img {
     width: 200px;
     height: 250px;
     object-fit: cover;
     border-radius: 10px;
 }
 
-.banner {
+.login-banner {
     background-image: url('../../assets/header_background.png');
     background-size: cover;
     background-repeat: no-repeat;
@@ -163,7 +163,7 @@ body {
     text-align: center;
 }
 
-.banner > button {
+.login-banner > button {
     width: 200px;
     height: 50px;
     border: none;
@@ -175,24 +175,24 @@ body {
     transition: background-color 0.3s ease-in-out;
 }
 
-.banner > button:hover {
+.login-banner > button:hover {
     transition: background-color 0.3s ease-in-out;
     background-color: #9400b1;
     color: #ffffff;
 }
 
 
-.accommodations {
+.login-accommodations {
     padding: 50px;
     text-align: center;
     background-color: #f7f7f7;
 }
 
-.accommodations > h2{
+.login-accommodations > h2{
     font-size: 56px;
 }
 
-.room {
+.login-room {
     display: inline-block;
     margin: 20px;
     padding: 20px;
@@ -201,19 +201,19 @@ body {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-.room h3 {
+.login-room h3 {
     font-weight: 700;
     margin-bottom: 10px;
 }
 
-.room img {
+.login-room img {
     width: 300px;
 }
 
-.room p {
+.login-room p {
     color: #9400b1;
 } 
 
-.room span {
+.login-room span {
     font-size: 28px;
 }

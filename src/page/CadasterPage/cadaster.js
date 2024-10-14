@@ -6,6 +6,7 @@ function CadasterPage() {
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [document, setDocument] = useState('');
+    const [bornDate, setBorndate] = useState('');
     const [telefone, setTelefone] = useState('');
     const [senha, setSenha] = useState('');
     const [formErrors, setFormErrors] = useState('');
@@ -16,7 +17,7 @@ function CadasterPage() {
         const regex = /^[a-zA-Z\s]+$/;
 
         if (!regex.test(value)) {
-            input.classList.add('error'); 
+            input.classList.add('error');
         } else {
             input.classList.remove('error');
         }
@@ -48,12 +49,12 @@ function CadasterPage() {
         }
 
         if (!validatePassword(senha)) {
-            setFormErrors('A senha deve ter pelo menos 8 caracteres.');
+            setFormErrors('A senha deve possuir pelo menos 8 caracteres.');
             return;
         }
 
         setFormErrors('');
-        
+
         const response = await fetch('http://localhost:3001/api/cliente', {
             method: 'POST',
             headers: {
@@ -76,23 +77,21 @@ function CadasterPage() {
     };
 
     return (
-        <div className="App">
-            <header className="header">
-                <div className="header-content">
-                    <div className="header-text">
-                        <h1>Hostel BR</h1>
-                        <h1>Bom Retiro</h1>
-                        <span id="header-span">
-                            <p>Venha conhecer o Hostel BR - Bom Retiro</p>
-                            <span>Economia e qualidade no mesmo lugar</span>
-                        </span>
-                    </div>
-                    <div className="container-register-form">
-                        <div className="register-form">
-                            <h2>Cadastre-se</h2>
-                            <form onSubmit={handleSubmit}>
-                                {formErrors && <p className="error">{formErrors}</p>}
-                                <label>Nome</label>
+        <div className="header">
+            <div className="header-content">
+                <div className="header-text">
+                    <h1>Hostel BR</h1>
+                    <h1>Bom Retiro</h1>
+                    <span id="header-span">
+                        <p>Venha conhecer o Hostel BR - Bom Retiro</p>
+                        <span>Economia e qualidade no mesmo lugar</span>
+                    </span>
+                </div>
+                <div className="container-register-form">
+                    <div className="register-form">
+                        <h2>Cadastre-se</h2>
+                        <form onSubmit={handleSubmit}>
+                            <label>Nome
                                 <input
                                     type="text"
                                     placeholder="Digite seu nome"
@@ -102,20 +101,21 @@ function CadasterPage() {
                                     onBlur={(e) => validateName(e)}
                                     required
                                 />
-                                <label>
-                                    CPF:
-                                    <InputMask
-                                        mask="999.999.999-99"
-                                        placeholder="Digite seu CPF"
-                                        value={document}
-                                        onChange={(e) => setDocument(e.target.value)}
-                                        required
-                                    >
-                                        {(inputProps) => <input {...inputProps} />}
-                                    </InputMask>
-                                </label>
+                            </label>
+                            <label>
+                                CPF:
+                                <InputMask
+                                    mask="999.999.999-99"
+                                    placeholder="Digite seu CPF"
+                                    value={document}
+                                    onChange={(e) => setDocument(e.target.value)}
+                                    required
+                                >
+                                    {(inputProps) => <input {...inputProps} />}
+                                </InputMask>
+                            </label>
 
-                                <label>E-mail</label>
+                            <label>E-mail
                                 <input
                                     type="email"
                                     placeholder="Digite seu e-mail"
@@ -124,35 +124,51 @@ function CadasterPage() {
                                     onBlur={(e) => validateEmail(e)}
                                     required
                                 />
-                                <label>
-                                    Telefone:
-                                    <InputMask
-                                        mask="(99) 99999-9999"
-                                        placeholder='Digite o seu telefone'
-                                        value={telefone}
-                                        onChange={(e) => setTelefone(e.target.value)}
-                                        required
-                                    >
-                                        {(inputProps) => <input {...inputProps} />}
-                                    </InputMask>
-                                </label>
-                                <label>Senha</label>
-                                <input
-                                    type="password"
-                                    placeholder="Digite uma senha"
-                                    value={senha}
-                                    onChange={(e) => setSenha(e.target.value)}
+                            </label>
+
+                            <label>
+                                Data de Nascimento:
+                                <InputMask
+                                    mask="99/99/9999"
+                                    placeholder="Digite sua data de nascimento"
+                                    value={bornDate}
+                                    onChange={(e) => setBorndate(e.target.value)}
                                     required
-                                />
-                                <button type="submit">Cadastrar</button>
-                            </form>
-                            <p>
-                                Já possui conta? <a id="text-login" href="/login">Faça Login</a>
-                            </p>
-                        </div>
+                                >
+                                    {(inputProps) => <input {...inputProps} />}
+                                </InputMask>
+                            </label>
+
+                            <label>
+                                Telefone:
+                                <InputMask
+                                    mask="(99) 99999-9999"
+                                    placeholder='Digite o seu telefone'
+                                    value={telefone}
+                                    onChange={(e) => setTelefone(e.target.value)}
+                                    required
+                                >
+                                    {(inputProps) => <input {...inputProps} />}
+                                </InputMask>
+                            </label>
+                            <label>Senha
+                            <input
+                                type="password"
+                                placeholder="Digite uma senha"
+                                value={senha}
+                                onChange={(e) => setSenha(e.target.value)}
+                                required
+                            />
+                            </label>
+                            {formErrors && <p className="error">{formErrors}</p>}
+                            <button type="submit">Cadastrar</button>
+                        </form>
+                        <p>
+                            Já possui conta? <a id="text-login" href="/login">Faça Login</a>
+                        </p>
                     </div>
                 </div>
-            </header>
+            </div>
         </div>
     );
 }

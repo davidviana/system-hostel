@@ -1,11 +1,10 @@
 // App.js
 import { useState } from "react";
-import InputMask from 'react-input-mask';
+import { Link } from "react-router-dom";
 
 import "./login.css";
 import Footer from '../../components/Footer/footer';
 import NavBar from "../../components/Navbar/navbar";
-// import SliderComponent from "../../components/Carrousel/carrousel";
 
 import CoupleRoom from '../../assets/couple_room.png';
 import SharedRoom from '../../assets/shared_room.png';
@@ -14,46 +13,50 @@ import Item_2 from '../../assets/carrousel_item_2.png';
 import Item_3 from '../../assets/carrousel_item_3.png';
 
 function LoginPage() {
-    const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
-    const [document, setDocument] = useState('');
-    const [telefone, setTelefone] = useState('');
     const [senha, setSenha] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);  // Inicia o carregamento
 
-        const response = await fetch('http://localhost:3001/api/cliente', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ nome, document, email, telefone, senha }),
-        });
+        try {
+            const response = await fetch('http://localhost:3001/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, senha }),
+            });
 
-        if (response.ok) {
+            if (!response.ok) {
+                throw new Error('Erro ao fazer login. Verifique suas credenciais.');
+            }
+
             const data = await response.json();
-            console.log('Formulário enviado com sucesso:', data);
-            setNome('');
-            setEmail('');
-            setDocument('');
-            setTelefone('');
-            setSenha('');
-        } else {
-            console.error('Erro ao enviar o formulário');
+            console.log('Login bem-sucedido:', data);
+            // Redirecionar ou realizar outras ações após o login
+
+        } catch (error) {
+            setErrorMessage(error.message);
+            console.error('Erro ao enviar o formulário', error);
+        } finally {
+            setIsLoading(false); // Finaliza o carregamento
         }
     };
 
     return (
-        <div className="App">
-            <NavBar className="navbar"/>
-            <header className="header">
-                <div className="header-content">
-                    <div className="header-text">
+        <div className="login-App">
+            <NavBar className="login-navbar"/>
+            <header className="login-header">
+                <div className="login-header-content">
+                    <div className="login-header-text">
                         <h1>Hostel BR - Bom Retiro</h1>
                     </div>
-                    <div className="container-register-form">
-                        <div className="register-form">
+                    <div className="login-container-register-form">
+                        <div className="login-register-form">
                             <h2>Login</h2>
                             <form onSubmit={handleSubmit}>
                                 <label>E-mail</label>
@@ -67,46 +70,47 @@ function LoginPage() {
                                 <label>Senha</label>
                                 <input
                                     type="password"
-                                    placeholder="Digite uma senha"
+                                    placeholder="Digite sua senha"
                                     value={senha}
                                     onChange={(e) => setSenha(e.target.value)}
                                     required
                                 />
-                                <button type="submit">Entrar</button>
+                                <button type="submit" disabled={isLoading}>
+                                    {isLoading ? 'Carregando...' : 'Entrar'}
+                                </button>
+                                {errorMessage && <p className="login-error-message">{errorMessage}</p>}
                             </form>
                             <p>
-                                Ainda não possui conta? <a href="/login">Cadastrar-se</a>
+                                Ainda não possui conta? <Link to="/cadaster">Cadastrar-se</Link>
                             </p>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <section className="gallery">
+            <section className="login-gallery">
                 <h2>Galeria de Fotos</h2>
-                <div className="gallery-images">
+                <div className="login-gallery-images">
                     <img src={Item_1} alt="Imagem 1" />
                     <img src={Item_2} alt="Imagem 2" />
                     <img src={Item_3} alt="Imagem 3" />
                 </div>
             </section>
 
-            {/* <SliderComponent/> */}
-
-            <section className="banner">
+            <section className="login-banner">
                 <h2>Uma super experiência para contar!</h2>
                 <button>Reservar Agora</button>
             </section>
 
-            <section className="accommodations">
+            <section className="login-accommodations">
                 <h2>Nossas Acomodações</h2>
                 <p>Quartos Individuais ou Compartilhados</p>
-                <div className="room">
+                <div className="login-room">
                     <img src={CoupleRoom} alt="Quarto Individual" />
                     <h3>Quarto Individual</h3>
                     <p><span>R$150</span> / noite</p>
                 </div>
-                <div className="room">
+                <div className="login-room">
                     <img src={SharedRoom} alt="Quarto Compartilhado" />
                     <h3>Quarto Compartilhado</h3>
                     <p><span>R$300</span> / noite</p>
