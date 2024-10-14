@@ -172,6 +172,7 @@ body {
     color: #9400b1;
     font-size: 18px;
     font-weight: 700;
+    cursor: pointer;
     transition: background-color 0.3s ease-in-out;
 }
 
@@ -216,4 +217,26 @@ body {
 
 .login-room span {
     font-size: 28px;
+}
+
+#text-cadaster {
+    display: inline-block;
+    position: relative;
+}
+
+#text-cadaster::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 100%;
+    background: #9400b1;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease-in-out;
+}
+
+#text-cadaster:hover::after {
+    transform: scaleX(1);
 }

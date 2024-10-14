@@ -10,6 +10,7 @@ body {
     padding: 0;
     box-sizing: border-box;
     overflow-x: hidden;
+
 }
 
 .header {
@@ -22,6 +23,7 @@ body {
     height: 100vh;
     text-align: center;
     color: white;
+    overflow-y: hidden;
 }
 
 .header::before {
@@ -161,4 +163,33 @@ body {
 
 .error {
     color: red;
+}
+
+.stacked-textfield {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.stacked-textfield > label {
+    margin: 0 10px 0 0;
+}
+
+input, select {
+    outline: none;
+}
+
+#drop-list {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+
+#drop-list > select {
+    width: 200px;
+    padding: 8px 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }

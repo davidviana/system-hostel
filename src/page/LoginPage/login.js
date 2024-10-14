@@ -20,7 +20,7 @@ function LoginPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true);  // Inicia o carregamento
+        setIsLoading(true);
 
         try {
             const response = await fetch('http://localhost:3001/api/login', {
@@ -43,7 +43,7 @@ function LoginPage() {
             setErrorMessage(error.message);
             console.error('Erro ao enviar o formulário', error);
         } finally {
-            setIsLoading(false); // Finaliza o carregamento
+            setIsLoading(false);
         }
     };
 
@@ -81,7 +81,7 @@ function LoginPage() {
                                 {errorMessage && <p className="login-error-message">{errorMessage}</p>}
                             </form>
                             <p>
-                                Ainda não possui conta? <Link to="/cadaster">Cadastrar-se</Link>
+                                Ainda não possui conta? <Link id="text-cadaster" to="/cadaster">Cadastrar-se</Link>
                             </p>
                         </div>
                     </div>

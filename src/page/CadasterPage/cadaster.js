@@ -8,6 +8,7 @@ function CadasterPage() {
     const [document, setDocument] = useState('');
     const [bornDate, setBorndate] = useState('');
     const [telefone, setTelefone] = useState('');
+    const [sexo, setSexo] = useState(''); // Adicionando estado para sexo
     const [senha, setSenha] = useState('');
     const [formErrors, setFormErrors] = useState('');
 
@@ -43,7 +44,7 @@ function CadasterPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!nome || !email || !document || !telefone || !senha) {
+        if (!nome || !email || !document || !telefone || !senha || !sexo) {
             setFormErrors('Todos os campos devem ser preenchidos.');
             return;
         }
@@ -60,7 +61,7 @@ function CadasterPage() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ nome, document, email, telefone, senha }),
+            body: JSON.stringify({ nome, document, email, telefone, sexo, senha }), // Adicionando sexo ao corpo da requisição
         });
 
         if (response.ok) {
@@ -70,6 +71,7 @@ function CadasterPage() {
             setEmail('');
             setDocument('');
             setTelefone('');
+            setSexo(''); // Limpando o estado do sexo
             setSenha('');
         } else {
             console.error('Erro ao enviar o formulário');
@@ -102,32 +104,34 @@ function CadasterPage() {
                                     required
                                 />
                             </label>
-                            <label>
-                                CPF:
-                                <InputMask
-                                    mask="999.999.999-99"
-                                    placeholder="Digite seu CPF"
-                                    value={document}
-                                    onChange={(e) => setDocument(e.target.value)}
-                                    required
-                                >
-                                    {(inputProps) => <input {...inputProps} />}
-                                </InputMask>
-                            </label>
+                            <div className="stacked-textfield">
+                                <label>
+                                    CPF
+                                    <InputMask
+                                        mask="999.999.999-99"
+                                        placeholder="Digite seu CPF"
+                                        value={document}
+                                        onChange={(e) => setDocument(e.target.value)}
+                                        required
+                                    >
+                                        {(inputProps) => <input {...inputProps} />}
+                                    </InputMask>
+                                </label>
 
-                            <label>E-mail
-                                <input
-                                    type="email"
-                                    placeholder="Digite seu e-mail"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    onBlur={(e) => validateEmail(e)}
-                                    required
-                                />
-                            </label>
+                                <label>E-mail
+                                    <input
+                                        type="email"
+                                        placeholder="Digite seu e-mail"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        onBlur={(e) => validateEmail(e)}
+                                        required
+                                    />
+                                </label>
+                            </div>
 
                             <label>
-                                Data de Nascimento:
+                                Data de Nascimento
                                 <InputMask
                                     mask="99/99/9999"
                                     placeholder="Digite sua data de nascimento"
@@ -139,26 +143,40 @@ function CadasterPage() {
                                 </InputMask>
                             </label>
 
-                            <label>
-                                Telefone:
-                                <InputMask
-                                    mask="(99) 99999-9999"
-                                    placeholder='Digite o seu telefone'
-                                    value={telefone}
-                                    onChange={(e) => setTelefone(e.target.value)}
-                                    required
-                                >
-                                    {(inputProps) => <input {...inputProps} />}
-                                </InputMask>
-                            </label>
+                            <div className="stacked-textfield">
+                                <label>
+                                    Telefone
+                                    <InputMask
+                                        mask="(99) 99999-9999"
+                                        placeholder='Digite o seu telefone'
+                                        value={telefone}
+                                        onChange={(e) => setTelefone(e.target.value)}
+                                        required
+                                    >
+                                        {(inputProps) => <input {...inputProps} />}
+                                    </InputMask>
+                                </label>
+
+                                <label id="drop-list">
+                                    Sexo
+                                    <select
+                                        value={sexo}
+                                        onChange={(e) => setSexo(e.target.value)}
+                                        required>
+                                        <option value="masculino">Masculino</option>
+                                        <option value="feminino">Feminino</option>
+                                        <option value="prefiro-não-dizer">Prefiro não dizer</option>
+                                    </select>
+                                </label>
+                            </div>
                             <label>Senha
-                            <input
-                                type="password"
-                                placeholder="Digite uma senha"
-                                value={senha}
-                                onChange={(e) => setSenha(e.target.value)}
-                                required
-                            />
+                                <input
+                                    type="password"
+                                    placeholder="Digite uma senha"
+                                    value={senha}
+                                    onChange={(e) => setSenha(e.target.value)}
+                                    required
+                                />
                             </label>
                             {formErrors && <p className="error">{formErrors}</p>}
                             <button type="submit">Cadastrar</button>
