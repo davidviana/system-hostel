@@ -12,7 +12,7 @@ function NavBar() {
                 <a href="/acomodacoes">Acomodações</a>
                 <a href="/reservas">Minhas Reservas</a>
             </div>
-            <button className="button-login"><a href="/login">Login</a></button>
+            <button className="button-login"><a href="/cadaster">Cadastre-se</a></button>
         </div>
     );
 }

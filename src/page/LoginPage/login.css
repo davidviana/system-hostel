@@ -240,3 +240,12 @@ body {
 #text-cadaster:hover::after {
     transform: scaleX(1);
 }
+
+.loading-container {
+    position: fixed; /* Fixa o GIF na tela */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centraliza o GIF */
+    z-index: 1000; 
+    background-color: white;
+}

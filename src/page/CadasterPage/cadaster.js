@@ -8,49 +8,113 @@ function CadasterPage() {
     const [document, setDocument] = useState('');
     const [bornDate, setBorndate] = useState('');
     const [telefone, setTelefone] = useState('');
-    const [sexo, setSexo] = useState(''); // Adicionando estado para sexo
+    const [sexo, setSexo] = useState('');
     const [senha, setSenha] = useState('');
     const [formErrors, setFormErrors] = useState('');
 
-    const validateName = (e) => {
-        const input = e.target;
-        const value = input.value;
+    // Função para validar CPF
+    const validateCPF = (cpf) => {
+        cpf = cpf.replace(/[^\d]+/g, ''); // Remove caracteres especiais
+
+        if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) {
+            return false;
+        }
+
+        let sum = 0;
+        for (let i = 0; i < 9; i++) {
+            sum += parseInt(cpf.charAt(i)) * (10 - i);
+        }
+        let firstVerifier = 11 - (sum % 11);
+        if (firstVerifier === 10 || firstVerifier === 11) {
+            firstVerifier = 0;
+        }
+        if (firstVerifier !== parseInt(cpf.charAt(9))) {
+            return false;
+        }
+
+        sum = 0;
+        for (let i = 0; i < 10; i++) {
+            sum += parseInt(cpf.charAt(i)) * (11 - i);
+        }
+        let secondVerifier = 11 - (sum % 11);
+        if (secondVerifier === 10 || secondVerifier === 11) {
+            secondVerifier = 0;
+        }
+        if (secondVerifier !== parseInt(cpf.charAt(10))) {
+            return false;
+        }
+
+        return true;
+    };
+
+    // Validação de Nome
+    const validateName = (name) => {
         const regex = /^[a-zA-Z\s]+$/;
-
-        if (!regex.test(value)) {
-            input.classList.add('error');
-        } else {
-            input.classList.remove('error');
-        }
+        return regex.test(name);
     }
 
-    const validateEmail = (e) => {
-        const input = e.target;
-        const value = input.value;
-
+    // Validação de Email
+    const validateEmail = (email) => {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!regex.test(value)) {
-            input.classList.add('error');
-        } else {
-            input.classList.remove('error');
-        }
+        return regex.test(email);
     }
 
-    const validatePassword = (value) => {
-        return value.length >= 8;
+    // Validação de Senha
+    const validatePassword = (password) => {
+        return password.length >= 8;
+    }
+
+    // Validação de Idade
+    const validateAge = (date) => {
+        const [day, month, year] = date.split('/');
+        const formatedDate = new Date(`${year}-${month}-${day}`);
+
+        if (isNaN(formatedDate)) {
+            return false;
+        }
+
+        let today = new Date();
+        let age = today.getFullYear() - formatedDate.getFullYear();
+        const monthDiff = today.getMonth() - formatedDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < formatedDate.getDate())) {
+            age--;
+        }
+
+        return age >= 18;
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        console.log(nome, document, email, bornDate, telefone, sexo, senha)
 
-        if (!nome || !email || !document || !telefone || !senha || !sexo) {
+        if (!nome || !email || !document || !bornDate || !telefone || !senha || !sexo) {
             setFormErrors('Todos os campos devem ser preenchidos.');
             return;
         }
 
         if (!validatePassword(senha)) {
             setFormErrors('A senha deve possuir pelo menos 8 caracteres.');
+            return;
+        }
+
+        if (!validateEmail(email)) {
+            setFormErrors('O e-mail informado não é válido.');
+            return;
+        }
+
+        if (!validateName(nome)) {
+            setFormErrors('O nome informado não é válido.');
+            return;
+        }
+
+        if (!validateAge(bornDate)) {
+            setFormErrors('O usuário é menor de idade.');
+            return;
+        }
+
+        if (!validateCPF(document)) {
+            setFormErrors('O CPF informado não é válido.');
             return;
         }
 
@@ -61,7 +125,7 @@ function CadasterPage() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ nome, document, email, telefone, sexo, senha }), // Adicionando sexo ao corpo da requisição
+            body: JSON.stringify({ nome, document, email, bornDate, telefone, sexo, senha }),
         });
 
         if (response.ok) {
@@ -70,11 +134,13 @@ function CadasterPage() {
             setNome('');
             setEmail('');
             setDocument('');
+            setBorndate('');
             setTelefone('');
-            setSexo(''); // Limpando o estado do sexo
+            setSexo('');
             setSenha('');
         } else {
             console.error('Erro ao enviar o formulário');
+            setFormErrors('Erro ao enviar o formulário');
         }
     };
 
@@ -100,7 +166,7 @@ function CadasterPage() {
                                     value={nome}
                                     maxLength={100}
                                     onChange={(e) => setNome(e.target.value)}
-                                    onBlur={(e) => validateName(e)}
+                                    onBlur={() => !validateName(nome) && setFormErrors('Nome inválido.')}
                                     required
                                 />
                             </label>
@@ -112,6 +178,7 @@ function CadasterPage() {
                                         placeholder="Digite seu CPF"
                                         value={document}
                                         onChange={(e) => setDocument(e.target.value)}
+                                        onBlur={() => !validateCPF(document) && setFormErrors('CPF inválido.')}
                                         required
                                     >
                                         {(inputProps) => <input {...inputProps} />}
@@ -124,7 +191,7 @@ function CadasterPage() {
                                         placeholder="Digite seu e-mail"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        onBlur={(e) => validateEmail(e)}
+                                        onBlur={() => !validateEmail(email) && setFormErrors('E-mail inválido.')}
                                         required
                                     />
                                 </label>
@@ -137,6 +204,7 @@ function CadasterPage() {
                                     placeholder="Digite sua data de nascimento"
                                     value={bornDate}
                                     onChange={(e) => setBorndate(e.target.value)}
+                                    onBlur={() => !validateAge(bornDate) && setFormErrors('Data de nascimento inválida ou menor de idade.')}
                                     required
                                 >
                                     {(inputProps) => <input {...inputProps} />}
@@ -163,6 +231,7 @@ function CadasterPage() {
                                         value={sexo}
                                         onChange={(e) => setSexo(e.target.value)}
                                         required>
+                                        <option value="">Selecione</option>
                                         <option value="masculino">Masculino</option>
                                         <option value="feminino">Feminino</option>
                                         <option value="prefiro-não-dizer">Prefiro não dizer</option>
