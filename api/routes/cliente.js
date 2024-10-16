@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../models/db');
 const encryptUsers = require('../helpers/encoder');
+const descryptUsers = require('../helpers/decoder')
+const crypto = require('crypto');
+const transporter = require('../helpers/sender')
 
 // GET: Listar todos os clientes
 router.get('/', async (req, res) => {
@@ -18,6 +21,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     const { nome, document, email, bornDate, telefone, sexo, senha } = req.body;
 
+    // Validação de campos obrigatórios
     if (!nome || !document || !email || !telefone || !senha || !sexo || !bornDate) {
         return res.status(400).send('Todos os campos são obrigatórios.');
     }
@@ -32,13 +36,11 @@ router.post('/', async (req, res) => {
     const today = new Date();
     const age = today.getFullYear() - formattedBornDate.getFullYear();
 
-    const hashedDocument = await encryptUsers(document);
-    const hashedSenha = await encryptUsers(senha);
-
     try {
+        const { hash: hashedSenha, salt: saltSenha } = await encryptUsers(senha);
         const result = await pool.query(
-            'INSERT INTO cliente (nome, cpf, email, telefone, senha_acesso, sexo, data_nascimento, idade) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-            [nome, hashedDocument, email, telefone, hashedSenha, sexo, formattedBornDate, age]
+            'INSERT INTO cliente (nome, cpf, email, telefone, senha_acesso, sexo, data_nascimento, idade, salt_senha) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+            [nome, document, email, telefone, hashedSenha, sexo, formattedBornDate, age, saltSenha]
         );
         res.status(201).json(result.rows[0]);
     } catch (err) {
@@ -47,6 +49,80 @@ router.post('/', async (req, res) => {
     }
 });
 
+// POST: Realizar o login do usuário
+router.post('/login', async (req, res) => {
+    const { email, senha } = req.body;
+    
+    try {
+        const result = await pool.query('SELECT * FROM cliente WHERE email = $1', [email]);
+        if (result.rows.length === 0) {
+            return res.status(401).send('Credenciais inválidas');
+        }
+
+        const user = result.rows[0];
+        const hashedSenha = await descryptUsers(senha, user.salt_senha);
+        if (hashedSenha !== user.senha_acesso) {
+            return res.status(401).send('Credenciais inválidas');
+        }
+        res.json({ message: 'Login bem-sucedido', user });
+    } catch (err) {
+        console.error('Erro ao realizar login:', err);
+        res.status(500).send('Erro ao realizar login');
+    }
+});
+
+// POSTS: Reset de Senha
+router.post('/reset', async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const result = await pool.query('SELECT * FROM cliente WHERE email = $1', [email]);
+        if (result.rows.length === 0) {
+            return res.status(404).send('E-mail não encontrado');
+        }
+
+        const code = crypto.randomBytes(3).toString('hex');
+
+        await transporter.sendMail({
+            from: 'hostelbrbomretiro@gmail.com',
+            to: email,
+            subject: 'Código de Redefinição de Senha',
+            text: `Seu código de redefinição de senha é: ${code}`,
+        });
+
+        res.status(200).send('Código enviado para o e-mail.');
+
+    } catch (error) {
+        console.log('Erro:', error);
+        res.status(500).send('Erro ao enviar o e-mail');
+    }
+});
+router.post('/confirm-code', async (req, res) => {
+    const { email, code } = req.body;
+
+    const isValidCode = true;
+
+    if (!isValidCode) {
+        return res.status(401).send('Código inválido');
+    }
+
+    res.status(200).send('Código confirmado, agora você pode redefinir sua senha.');
+});
+
+router.post('/reset-password', async (req, res) => {
+    const { email, newPassword } = req.body;
+
+    const {hash: hashedNovaSenha, salt: saltNovaSenha} = await encryptUsers(newPassword)
+
+    try {
+        await pool.query('UPDATE cliente SET senha_acesso = $1, salt_senha = $2 WHERE email = $3', [hashedNovaSenha, saltNovaSenha, email]);
+
+        res.status(200).send('Senha redefinida com sucesso.');
+    } catch (error) {
+        console.log('Erro:', error);
+        res.status(500).send('Erro ao redefinir a senha');
+    }
+});
 
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;

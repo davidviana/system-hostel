@@ -1,10 +1,10 @@
-const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 const encryptUsers = async (string) => {
     try {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(string, salt);
-        return hash;
+        const salt = crypto.randomBytes(16).toString('hex');
+        const hash = crypto.createHmac('sha256', salt).update(string).digest('hex'); 
+        return { hash, salt };
     } catch (error) {
         console.error('Erro ao criptografar a string:', error);
     }
