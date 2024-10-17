@@ -108,7 +108,6 @@ router.post('/confirm-code', async (req, res) => {
 
     res.status(200).send('Código confirmado, agora você pode redefinir sua senha.');
 });
-
 router.post('/reset-password', async (req, res) => {
     const { email, newPassword } = req.body;
 
@@ -124,6 +123,47 @@ router.post('/reset-password', async (req, res) => {
     }
 });
 
+// POST: Atualizar as informações do cadastro
+router.post('/update', async (req, res) => {
+    const { id, nome, email, telefone } = req.body;
+    if (!nome && !email && !telefone && !id) {
+        return res.status(400).json({ message: 'Pelo menos um campo deve ser fornecido para atualização.' });
+    }
+
+    try {
+        const updates = [];
+        const params = [];
+
+        if (nome) {
+            updates.push(`nome = $${updates.length + 1}`);
+            params.push(nome);
+        }
+        if (email) {
+            updates.push(`email = $${updates.length + 1}`);
+            params.push(email);
+        }
+        if (telefone) {
+            updates.push(`telefone = $${updates.length + 1}`);
+            params.push(telefone);
+        }
+
+        const query = `UPDATE cliente SET ${updates.join(', ')} WHERE id = $${updates.length + 1} RETURNING *`;
+        params.push(id);
+
+        const result = await pool.query(query, params);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ message: 'Cliente não encontrado.' });
+        }
+
+        return res.status(200).json({ message: 'Cadastro atualizado com sucesso.', data: result.rows[0] });
+    } catch (error) {
+        console.error('Erro ao atualizar o cadastro:', error);
+        return res.status(500).json({ message: 'Erro interno ao atualizar o cadastro.' });
+    }
+});
+
+// DELETE: Remover o usuário da base de dados
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -131,7 +171,8 @@ router.delete('/:id', async (req, res) => {
         if (result.rowCount === 0) {
             return res.status(404).send('Cliente não encontrado');
         }
-        res.status(204).send();
+
+        res.status(204).send({ message: 'Usuário deletado com sucesso' });
     } catch (err) {
         console.error('Erro ao remover cliente:', err);
         res.status(500).send('Erro ao remover cliente');
