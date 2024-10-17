@@ -1,12 +1,16 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import LoginPage from './page/LoginPage/login';
 import CadastroPage from './page/CadasterPage/cadaster';
 import HomePage from './page/HomePage/home';
 import ForgotPasswordPage from './page/ForgotPasswordPage/forgot';
+import UpdateCadasterPage from './page/UpdateCadasterPage/update_cadaster';
+import DeletePage from './page/DeletePage/delete';
+
 import { useEffect, useState } from 'react';
 
 function App() {
     const [isLogged, setIsLogged] = useState(false);
+    const navegate = useNavigate()
 
     useEffect(() => {
         const loginTime = localStorage.getItem('loginTime');
@@ -18,6 +22,7 @@ function App() {
         } else {
             localStorage.removeItem('isLogged');
             localStorage.removeItem('loginTime');
+            navegate('/')
         }
     }, []);
 
@@ -27,7 +32,8 @@ function App() {
                 <>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/home" element={<HomePage />} />
-                    <Route path="/cadaster" element={<CadastroPage />} />
+                    <Route path="/update" element={<UpdateCadasterPage />} />
+                    <Route path="/delete" element={<DeletePage />} />
                 </>
             ) : (
                 <>

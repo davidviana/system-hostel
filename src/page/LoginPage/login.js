@@ -23,7 +23,7 @@ function LoginPage() {
         e.preventDefault();
         setIsLoading(true);
         setErrorMessage('');
-
+    
         try {
             const response = await fetch('http://localhost:3001/api/cliente/login', {
                 method: 'POST',
@@ -32,24 +32,24 @@ function LoginPage() {
                 },
                 body: JSON.stringify({ email, senha }),
             });
-
+    
             if (!response.ok) {
                 const errorMessage = await response.text();
                 throw new Error(errorMessage);
             }
-
+    
             const data = await response.json();
-            console.log('Login bem-sucedido:', data);
 
+            localStorage.setItem('userId', data.user.id);
             localStorage.setItem('isLogged', 'true');
             localStorage.setItem('loginTime', Date.now());
-
+    
             setShowGif(true);
-
+    
             setTimeout(() => {
                 navigate('/home');
             }, 3000);
-
+    
         } catch (error) {
             setErrorMessage(error.message);
             console.error('Erro ao enviar o formulário', error);

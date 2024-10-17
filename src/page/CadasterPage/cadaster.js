@@ -1,5 +1,6 @@
 import { useState } from "react";
 import InputMask from 'react-input-mask';
+import { useNavigate } from "react-router-dom";
 import "./cadaster.css";
 
 function CadasterPage() {
@@ -11,10 +12,11 @@ function CadasterPage() {
     const [sexo, setSexo] = useState('');
     const [senha, setSenha] = useState('');
     const [formErrors, setFormErrors] = useState('');
+    const navigate = useNavigate();
 
     // Função para validar CPF
     const validateCPF = (cpf) => {
-        cpf = cpf.replace(/[^\d]+/g, ''); // Remove caracteres especiais
+        cpf = cpf.replace(/[^\d]+/g, '');
 
         if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) {
             return false;
@@ -138,6 +140,7 @@ function CadasterPage() {
             setTelefone('');
             setSexo('');
             setSenha('');
+            navigate('/login')
         } else {
             console.error('Erro ao enviar o formulário');
             setFormErrors('Erro ao enviar o formulário');
