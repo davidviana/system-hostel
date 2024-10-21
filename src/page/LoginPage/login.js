@@ -1,4 +1,3 @@
-// Login.js
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
@@ -9,21 +8,24 @@ import SharedRoom from '../../assets/shared_room.png';
 import Item_1 from '../../assets/carrousel_item_1.png';
 import Item_2 from '../../assets/carrousel_item_2.png';
 import Item_3 from '../../assets/carrousel_item_3.png';
-import loadingGif from '../../assets/loading.gif';
+import Lottie from 'react-lottie-player';
+import FirstloadingAnimation from '../../assets/loading_animation_1.json';
+import SecondloadingAnimation from '../../assets/loading_animation_2.json';
+import ThirdloadingAnimation from '../../assets/loading_animation_3.json';
+import FourtloadingAnimation from '../../assets/loading_animation_4.json';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [showGif, setShowGif] = useState(false);
+    const [showAnimation, setShowAnimation] = useState(false);
+    const [loadingAnimation, setLoadingAnimation] = useState(null);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
         setErrorMessage('');
-    
+
         try {
             const response = await fetch('http://localhost:3001/api/cliente/login', {
                 method: 'POST',
@@ -32,29 +34,40 @@ function LoginPage() {
                 },
                 body: JSON.stringify({ email, senha }),
             });
-    
+
             if (!response.ok) {
                 const errorMessage = await response.text();
                 throw new Error(errorMessage);
             }
-    
+
             const data = await response.json();
 
             localStorage.setItem('userId', data.user.id);
             localStorage.setItem('isLogged', 'true');
             localStorage.setItem('loginTime', Date.now());
-    
-            setShowGif(true);
-    
+
+            // Lista de animações
+            const list_loading = [
+                FirstloadingAnimation,
+                SecondloadingAnimation,
+                ThirdloadingAnimation,
+                FourtloadingAnimation
+            ];
+
+            // Seleciona uma animação aleatória
+            const randomIndex = Math.floor(Math.random() * list_loading.length);
+            setLoadingAnimation(list_loading[randomIndex]);
+
+            setShowAnimation(true); 
+
+            // Redireciona após 3 segundos
             setTimeout(() => {
                 navigate('/home');
             }, 3000);
-    
+
         } catch (error) {
             setErrorMessage(error.message);
             console.error('Erro ao enviar o formulário', error);
-        } finally {
-            setIsLoading(false);
         }
     };
 
@@ -102,9 +115,7 @@ function LoginPage() {
                                     onChange={(e) => setSenha(e.target.value)}
                                     required
                                 />
-                                <button type="submit" disabled={isLoading}>
-                                    {isLoading ? 'Carregando...' : 'Entrar'}
-                                </button>
+                                <button type="submit">Entrar</button>
                                 {errorMessage && <p className="login-error-message">{errorMessage}</p>}
                             </form>
                             <p>
@@ -115,9 +126,14 @@ function LoginPage() {
                 </div>
             </header>
 
-            {showGif && (
+            {showAnimation && loadingAnimation && (
                 <div className="loading-container">
-                    <img src={loadingGif} alt="Carregando..." />
+                    <Lottie
+                        loop
+                        animationData={loadingAnimation}
+                        play
+                        style={{ width: 600, height: 600 }}
+                    />
                 </div>
             )}
 

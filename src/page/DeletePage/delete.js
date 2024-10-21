@@ -5,7 +5,7 @@ function DeletePage() {
     const navigate = useNavigate();
 
     const cancelDelete = () => {
-        console.log('Cancelar');
+        
     }
 
     const confirmDelete = async () => {

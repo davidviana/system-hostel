@@ -14,7 +14,6 @@ function CadasterPage() {
     const [formErrors, setFormErrors] = useState('');
     const navigate = useNavigate();
 
-    // Função para validar CPF
     const validateCPF = (cpf) => {
         cpf = cpf.replace(/[^\d]+/g, '');
 

@@ -1,9 +1,10 @@
 import { useState, React } from "react";
 import InputMask from 'react-input-mask';
 import { useNavigate } from "react-router-dom";
+import './update_cadaster.css'
 
 function UpdateCadasterPage() {
-    const [step, setStep] = useState(1); // Estado para controlar o passo atual
+    const [step, setStep] = useState(1);
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [telefone, setTelefone] = useState('');
@@ -86,11 +87,11 @@ function UpdateCadasterPage() {
                         <span>Economia e qualidade no mesmo lugar</span>
                     </span>
                 </div>
-                <div className="container-register-form">
-                    <div className="register-form">
+                <div className="upload-container-register-form">
+                    <div className="upload-register-form">
                         {step === 1 && (
                             <>
-                                <h2>Selecionar Campos para Atualizar</h2>
+                                <h2>Selecione os campos para atualizar: </h2>
                                 <label>
                                     <input
                                         type="checkbox"
@@ -120,7 +121,7 @@ function UpdateCadasterPage() {
                             </>
                         )}
                         {step === 2 && (
-                            <>
+                            <div className="second-step">
                                 <h2>Atualizar Cadastro</h2>
                                 {selectedFields.nome && (
                                     <label>Nome
@@ -163,7 +164,7 @@ function UpdateCadasterPage() {
                                 )}
                                 {formErrors && <p className="error">{formErrors}</p>}
                                 <button type="submit" onClick={handleSubmit}>Atualizar</button>
-                            </>
+                            </div>
                         )}
                     </div>
                 </div>
