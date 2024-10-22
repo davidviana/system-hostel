@@ -17,6 +17,23 @@ router.get('/', async (req, res) => {
     }
 });
 
+// GET: Pegar só um cliente
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const result = await pool.query('SELECT nome FROM cliente WHERE id = $1', [id]);
+        if (result.rowCount === 0) {
+            return res.status(404).send('Cliente não encontrado');
+        }
+
+        res.status(200).send({ nome: result.rows[0].nome });
+    } catch (err) {
+        console.error('Erro ao buscar clientes:', err);
+        res.status(500).send('Erro ao buscar cliente');
+    }
+});
+
 // POST: Adicionar um novo cliente
 router.post('/', async (req, res) => {
     const { nome, document, email, bornDate, telefone, sexo, senha } = req.body;
@@ -52,7 +69,7 @@ router.post('/', async (req, res) => {
 // POST: Realizar o login do usuário
 router.post('/login', async (req, res) => {
     const { email, senha } = req.body;
-    
+
     try {
         const result = await pool.query('SELECT * FROM cliente WHERE email = $1', [email]);
         if (result.rows.length === 0) {
@@ -111,7 +128,7 @@ router.post('/confirm-code', async (req, res) => {
 router.post('/reset-password', async (req, res) => {
     const { email, newPassword } = req.body;
 
-    const {hash: hashedNovaSenha, salt: saltNovaSenha} = await encryptUsers(newPassword)
+    const { hash: hashedNovaSenha, salt: saltNovaSenha } = await encryptUsers(newPassword)
 
     try {
         await pool.query('UPDATE cliente SET senha_acesso = $1, salt_senha = $2 WHERE email = $3', [hashedNovaSenha, saltNovaSenha, email]);
