@@ -46,7 +46,6 @@ function LoginPage() {
             localStorage.setItem('isLogged', 'true');
             localStorage.setItem('loginTime', Date.now());
 
-            // Lista de animações
             const list_loading = [
                 FirstloadingAnimation,
                 SecondloadingAnimation,
@@ -54,13 +53,11 @@ function LoginPage() {
                 FourtloadingAnimation
             ];
 
-            // Seleciona uma animação aleatória
             const randomIndex = Math.floor(Math.random() * list_loading.length);
             setLoadingAnimation(list_loading[randomIndex]);
 
-            setShowAnimation(true); 
+            setShowAnimation(true);
 
-            // Redireciona após 3 segundos
             setTimeout(() => {
                 navigate('/home');
             }, 3000);
@@ -80,6 +77,7 @@ function LoginPage() {
             if (loginTime && (currentTime - loginTime) >= TEN_MINUTES) {
                 localStorage.removeItem('isLogged');
                 localStorage.removeItem('loginTime');
+                window.location.reload()
                 navigate('/login');
             }
         }, 60000);
@@ -89,7 +87,7 @@ function LoginPage() {
 
     return (
         <div className="login-App">
-            <NavBar className="login-navbar" />
+            <NavBar fotos='galery-section' acomodacoes='acommodation-section' reservas='reservas-section' />
             <header className="login-header">
                 <div className="login-header-content">
                     <div className="login-header-text">
@@ -129,6 +127,7 @@ function LoginPage() {
             {showAnimation && loadingAnimation && (
                 <div className="loading-container">
                     <Lottie
+                        id='gif'
                         loop
                         animationData={loadingAnimation}
                         play
@@ -137,7 +136,7 @@ function LoginPage() {
                 </div>
             )}
 
-            <section className="login-gallery">
+            <section className="login-gallery" id='galery-section'>
                 <h2>Galeria de Fotos</h2>
                 <div className="login-gallery-images">
                     <img src={Item_1} alt="Imagem 1" />
@@ -151,8 +150,8 @@ function LoginPage() {
                 <button>Reservar Agora</button>
             </section>
 
-            <section className="login-accommodations">
-                <h2>Nossas Acomodações</h2>
+            <section className="login-accommodations" id='accomodations-section'>
+                <h2 id='acommodation-section'>Nossas Acomodações</h2>
                 <p>Quartos Individuais ou Compartilhados</p>
                 <div className="login-room">
                     <img src={CoupleRoom} alt="Quarto Individual" />

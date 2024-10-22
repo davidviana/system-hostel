@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./navbar.css";
 import Icon from '../../assets/default_profile_icon.png';
 import Up from '../../assets/chevron_up.png';
 import DeletePage from "../../page/DeletePage/delete";
-import UpdateCadasterPage from "../../page/UpdateCadasterPage/update_cadaster";
 
-function NavBar() {
+function NavBar({ fotos, acomodacoes, reservas }) {
     const [userName, setUserName] = useState("");
     const [isRotated, setIsRotated] = useState(false);
     const [isMenuVisible, setIsMenuVisible] = useState(false);
-    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false); 
+    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+    const navigate = useNavigate()
 
     const profileMenu = () => {
         setIsMenuVisible(!isMenuVisible);
@@ -46,16 +46,29 @@ function NavBar() {
         setIsMenuVisible(false)
     };
 
+    const closeSession = () => {
+        localStorage.clear()
+        window.location.reload(true)
+        navigate('/')
+    }
+
     const closeDeleteModal = () => {
         setIsDeleteModalVisible(false);
+    };
+
+    const scrollToSection = (sectionId) => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.scrollIntoView({ behavior: "smooth" });
+        }
     };
 
     return (
         <div className="navbar">
             <div className="navbar-container">
-                <a href="/fotos">Fotos</a>
-                <a href="/acomodacoes">Acomodações</a>
-                <a href="/reservas">Minhas Reservas</a>
+                <a onClick={() => scrollToSection(fotos)}>Fotos</a>
+                <a onClick={() => scrollToSection(acomodacoes)}>Acomodações</a>
+                <a onClick={() => scrollToSection(reservas)}>Reservas</a>
             </div>
             {isLogged ? (
                 <div className="profile-section">
@@ -71,9 +84,9 @@ function NavBar() {
                     {isMenuVisible && (
                         <div className="menu">
                             <ul>
-                                <li><Link to='/update'>Atualizar cadastro</Link></li>
-                                <li><button onClick={openDeleteModal}>Deletar cadastro</button></li>
-                                <li>Sair</li>
+                                <Link className="menu-item" to='/update'><li>Atualizar cadastro</li></Link>
+                                <Link className="menu-item" onClick={openDeleteModal}><li>Deletar cadastro</li></Link>
+                                <Link className="menu-item" onClick={closeSession}><li>Sair</li></Link>
                             </ul>
                         </div>
                     )}
@@ -85,11 +98,7 @@ function NavBar() {
             )}
 
             {isDeleteModalVisible && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <DeletePage closeModal={closeDeleteModal} />
-                    </div>
-                </div>
+                <DeletePage closeModal={closeDeleteModal} />
             )}
         </div>
     );

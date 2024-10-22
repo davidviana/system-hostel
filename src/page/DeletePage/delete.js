@@ -1,11 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import './delete.css'
 
-function DeletePage() {
+function DeletePage({ closeModal }) { 
     const navigate = useNavigate();
 
     const cancelDelete = () => {
-        
+        closeModal();
     }
 
     const confirmDelete = async () => {
@@ -27,7 +28,7 @@ function DeletePage() {
     }
 
     return (
-        <div>
+        <div className="">
             <p>Deseja realizar a exclusão do seu cadastro?</p>
             <div>
                 <button onClick={confirmDelete}>Confirmar</button>

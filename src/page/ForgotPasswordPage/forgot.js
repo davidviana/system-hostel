@@ -3,8 +3,6 @@ import { useState } from "react";
 import './forgot.css';
 import { useNavigate } from "react-router-dom";
 
-import LoginPage from "../LoginPage/login";
-
 function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
     const [code, setCode] = useState(''); 
