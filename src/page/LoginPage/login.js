@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import InputMask from 'react-input-mask';
 import "./login.css";
 import Footer from '../../components/Footer/footer';
 import NavBar from "../../components/Navbar/navbar";
@@ -15,12 +16,47 @@ import ThirdloadingAnimation from '../../assets/loading_animation_3.json';
 import FourtloadingAnimation from '../../assets/loading_animation_4.json';
 
 function LoginPage() {
-    const [email, setEmail] = useState('');
+    const [document, setDocument] = useState('');
     const [senha, setSenha] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [formErrors, setFormErrors] = useState('');
     const [showAnimation, setShowAnimation] = useState(false);
     const [loadingAnimation, setLoadingAnimation] = useState(null);
     const navigate = useNavigate();
+
+    const validateCPF = (cpf) => {
+        cpf = cpf.replace(/[^\d]+/g, '');
+
+        if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) {
+            return false;
+        }
+
+        let sum = 0;
+        for (let i = 0; i < 9; i++) {
+            sum += parseInt(cpf.charAt(i)) * (10 - i);
+        }
+        let firstVerifier = 11 - (sum % 11);
+        if (firstVerifier === 10 || firstVerifier === 11) {
+            firstVerifier = 0;
+        }
+        if (firstVerifier !== parseInt(cpf.charAt(9))) {
+            return false;
+        }
+
+        sum = 0;
+        for (let i = 0; i < 10; i++) {
+            sum += parseInt(cpf.charAt(i)) * (11 - i);
+        }
+        let secondVerifier = 11 - (sum % 11);
+        if (secondVerifier === 10 || secondVerifier === 11) {
+            secondVerifier = 0;
+        }
+        if (secondVerifier !== parseInt(cpf.charAt(10))) {
+            return false;
+        }
+
+        return true;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,7 +68,7 @@ function LoginPage() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, senha }),
+                body: JSON.stringify({ document, senha }),
             });
 
             if (!response.ok) {
@@ -97,14 +133,19 @@ function LoginPage() {
                         <div className="login-register-form">
                             <h2>Login</h2>
                             <form onSubmit={handleSubmit}>
-                                <label>E-mail</label>
-                                <input
-                                    type="email"
-                                    placeholder="Digite seu e-mail"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                />
+                                <label>
+                                    CPF
+                                    <InputMask
+                                        mask="999.999.999-99"
+                                        placeholder="Digite seu CPF"
+                                        value={document}
+                                        onChange={(e) => setDocument(e.target.value)}
+                                        onBlur={() => !validateCPF(document) && setFormErrors('CPF inválido.')}
+                                        required
+                                    >
+                                        {(inputProps) => <input {...inputProps} />}
+                                    </InputMask>
+                                </label>
                                 <label>Senha</label>
                                 <input
                                     type="password"

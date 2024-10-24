@@ -158,6 +158,7 @@ function CadasterPage() {
                     </span>
                 </div>
                 <div className="container-register-form">
+                {formErrors && <p className="error">{formErrors}</p>}
                     <div className="register-form">
                         <h2>Cadastre-se</h2>
                         <form onSubmit={handleSubmit}>
@@ -249,7 +250,6 @@ function CadasterPage() {
                                     required
                                 />
                             </label>
-                            {formErrors && <p className="error">{formErrors}</p>}
                             <button type="submit">Cadastrar</button>
                         </form>
                         <p>

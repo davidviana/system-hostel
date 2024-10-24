@@ -148,21 +148,29 @@ body {
     content: '';
     position: absolute;
     left: 0;
-    bottom: 0; /* Ajuste se necessário */
-    height: 1px; /* Altura do sublinhado */
+    bottom: 0;
+    height: 1px;
     width: 100%;
-    background: #9400b1; /* Cor do sublinhado */
-    transform: scaleX(0); /* Começa invisível */
-    transform-origin: left; /* Início da animação */
-    transition: transform 0.3s ease-in-out; /* Animação */
+    background: #9400b1;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease-in-out; 
 }
 
 #text-login:hover::after {
-    transform: scaleX(1); /* Expande o sublinhado ao passar o mouse */
+    transform: scaleX(1);
 }
 
 .error {
-    color: red;
+    z-index: 5;
+    position: absolute;
+    top: 10px;
+    right: 0;
+    background-color: rgb(226, 94, 94);
+    border-radius: 5px;
+    color: white;
+    width: 400px;
+    height: 30px;
 }
 
 .stacked-textfield {

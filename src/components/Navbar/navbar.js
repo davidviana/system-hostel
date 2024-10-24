@@ -27,7 +27,10 @@ function NavBar({ fotos, acomodacoes, reservas }) {
 
         if (response.ok) {
             const data = await response.json();
-            setUserName(data.nome);
+            let first_name = data.nome.split(' ')[0]
+            let last_name =  data.nome.split(' ').slice(-1)[0]
+            const nome_completo = first_name + ' ' + last_name
+            setUserName(nome_completo);
         } else {
             console.log('Erro ao puxar o nome do usuário');
         }
@@ -66,9 +69,9 @@ function NavBar({ fotos, acomodacoes, reservas }) {
     return (
         <div className="navbar">
             <div className="navbar-container">
-                <a onClick={() => scrollToSection(fotos)}>Fotos</a>
-                <a onClick={() => scrollToSection(acomodacoes)}>Acomodações</a>
-                <a onClick={() => scrollToSection(reservas)}>Reservas</a>
+                <a href={fotos}>Fotos</a>
+                <a href={acomodacoes}>Acomodações</a>
+                <a href={reservas}>Reservas</a>
             </div>
             {isLogged ? (
                 <div className="profile-section">

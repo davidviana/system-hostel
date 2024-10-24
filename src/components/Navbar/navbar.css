@@ -15,15 +15,15 @@ body {
 .navbar {
     display: flex;
     flex-direction: row;
-    width: 100%;
-    height: 40px;
+    width: 90%;
+    height: 50px;
+    left: 5%;
     align-items: center;
     position: fixed;
     z-index: 3;
     background-color: #fff;
-    border: 1px solid red;
-    box-shadow: 10px 10px 10px #e0e0e0;
-    border-radius: 20px;
+    box-shadow: inset 5px 5px 5px #b9b5b5;
+    border-radius: 25px;
     margin-top: 10px;
 }
 
@@ -38,6 +38,36 @@ body {
 .navbar .navbar-container a {
     text-decoration: none;
     color: #000;
+}
+
+.navbar .navbar-container a {
+    display: inline-block;
+    position: relative;
+}
+
+.navbar .navbar-container a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 100%;
+    background: #9400b1;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease-in-out; 
+}
+
+.navbar .navbar-container a:hover::after {
+    transform: scaleX(1);
+}
+
+.navbar-container {
+    cursor: pointer;
+}
+
+.navbar-container a:hover {
+    cursor: pointer;
 }
 
 .button-login {
@@ -106,7 +136,6 @@ body {
     border: none;
     transition: transform 0.3s ease;
 }
-
 
 .rotate {
     transform: rotate(180deg);
