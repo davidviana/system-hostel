@@ -8,6 +8,7 @@ function ReservePage() {
     return (
         <div>
             <ReserveComponent />
+            <p>Teste    </p>
         </div>
     );
 }

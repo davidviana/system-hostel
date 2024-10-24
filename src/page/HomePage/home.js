@@ -18,7 +18,7 @@ function HomePage() {
             <NavBar fotos='galery-section' acomodacoes='acommodation-section' reservas='/reserve' />
             <header className="login-header">
                 <div className="login-header-content">
-                    <div className="login-header-text">
+                    <div className="login-header-text" id='teste'>
                         <h1>Hostel BR - Bom Retiro</h1>
                     </div>
                     <ReserveComponent id='reserve-comp'/>
