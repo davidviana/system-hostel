@@ -2,11 +2,15 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../models/db');
 
-// GET: Listar todos os quartos
+// GET: Listar quartos disponíveis
 router.get('/', async (req, res) => {
+    const status = 'disponivel'
     try {
-        const result = await pool.query('SELECT * FROM Quarto');
+        const result = await pool.query(
+            'SELECT * FROM quarto WHERE status_quarto LIKE $1', [status]
+        );
         res.json(result.rows);
+        console.log(result)
     } catch (err) {
         console.error('Erro ao buscar quartos:', err);
         res.status(500).send('Erro ao buscar quartos');
@@ -17,7 +21,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     const { numero, andar, tipo, preco, status } = req.body;
     try {
-        const result = await pool.query('INSERT INTO Quarto (numero, andar, tipo, preco, status) VALUES ($1, $2, $3, $4, $5) RETURNING *', [numero, andar, tipo, preco, status]);
+        const result = await pool.query('INSERT INTO Quarto (numero, andar, tipo, preco, status_quarto) VALUES ($1, $2, $3, $4, $5) RETURNING *', [numero, andar, tipo, preco, status]);
         res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error('Erro ao adicionar quarto:', err);
