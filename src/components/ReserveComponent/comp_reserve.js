@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
+import { useNavigate } from 'react-router-dom';
 import 'react-datepicker/dist/react-datepicker.css';
-
 import './comp_reserve.css';
 
 function ReserveComponent() {
@@ -10,21 +10,16 @@ function ReserveComponent() {
     const [guestCount, setGuestCount] = useState(''); 
     const [modal, setModal] = useState(false);
 
-    const openModal = () => {
-        setModal(true);
-    };
+    const navigate = useNavigate();
 
-    const closeModal = () => {
-        setModal(false);
-    };
+    const openModal = () => setModal(true);
+    const closeModal = () => setModal(false);
 
     const onChange = (dates) => {
         const [start, end] = dates;
         setStartDate(start);
         setEndDate(end);
-        if (start && end) {
-            closeModal();
-        }
+        if (start && end) closeModal();
     };
 
     const formatDate = (date) => {
@@ -33,6 +28,12 @@ function ReserveComponent() {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
+    };
+
+    const handleSearch = () => {
+        navigate('/reserve', {
+            state: { startDate, endDate, guestCount }
+        });
     };
 
     return (
@@ -57,11 +58,10 @@ function ReserveComponent() {
                         <option value="2">2 Hóspedes</option>
                         <option value="3">3 Hóspedes</option>
                         <option value="4">4 Hóspedes</option>
-                        <option value="5">5 Hóspedes</option>
                     </select>
                 </div>
 
-                <button type='submit' id='button-buscar'>
+                <button type='button' id='button-buscar' onClick={handleSearch}>
                     Buscar
                 </button>
             </div>

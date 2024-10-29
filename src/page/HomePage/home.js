@@ -11,8 +11,10 @@ import SharedRoom from '../../assets/shared_room.png';
 import CoupleRoom from '../../assets/couple_room.png';
 
 import './home.css'
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
+    const navegate = useNavigate()
     return (
         <div className="login-App">
             <NavBar fotos='galery-section' acomodacoes='acommodation-section' reservas='/reserve' />
@@ -37,7 +39,7 @@ function HomePage() {
 
             <section className="login-banner" id='reservas-section'>
                 <h2>Uma super experiência para contar!</h2>
-                <button>Reservar Agora</button>
+                <button onClick={navegate('/reserve')}>Reservar Agora</button>
             </section>
 
             <section className="login-accommodations" id='accomodations-section'>

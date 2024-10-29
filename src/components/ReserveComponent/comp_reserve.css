@@ -73,7 +73,7 @@
 }
 
 .modal-container {
-    position: absolute; /* O modal vai sobrepor todo o conteúdo */
+    position: absolute; 
     align-items: center;
     z-index: 5;
 }
