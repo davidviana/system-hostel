@@ -68,10 +68,10 @@ router.post('/', async (req, res) => {
 
 // POST: Realizar o login do usuário
 router.post('/login', async (req, res) => {
-    const { email, senha } = req.body;
+    const { document, senha } = req.body; 
 
     try {
-        const result = await pool.query('SELECT * FROM cliente WHERE email = $1', [email]);
+        const result = await pool.query('SELECT * FROM cliente WHERE cpf = $1', [document]);
         if (result.rows.length === 0) {
             return res.status(401).send('Credenciais inválidas');
         }
