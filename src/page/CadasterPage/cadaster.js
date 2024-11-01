@@ -150,11 +150,10 @@ function CadasterPage() {
         <div className="header">
             <div className="header-content">
                 <div className="header-text">
-                    <h1>Hostel BR</h1>
-                    <h1>Bom Retiro</h1>
+                    <h1>IYEEHCEL</h1>
                     <span id="header-span">
-                        <p>Venha conhecer o Hostel BR - Bom Retiro</p>
-                        <span>Economia e qualidade no mesmo lugar</span>
+                        <p>Venha conhecer o Hostel mais luxuoso da Suíça</p>
+                        <span>Glamour e qualidade no mesmo lugar</span>
                     </span>
                 </div>
                 <div className="container-register-form">

@@ -21,7 +21,7 @@ function HomePage() {
             <header className="login-header">
                 <div className="login-header-content">
                     <div className="login-header-text" id='teste'>
-                        <h1>Hostel BR - Bom Retiro</h1>
+                        <h1>IYEEHCEL - Hotel</h1>
                     </div>
                     <ReserveComponent id='reserve-comp'/>
                 </div>
