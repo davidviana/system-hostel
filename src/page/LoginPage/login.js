@@ -2,13 +2,6 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import InputMask from 'react-input-mask';
 import "./login.css";
-import Footer from '../../components/Footer/footer';
-import NavBar from "../../components/Navbar/navbar";
-import CoupleRoom from '../../assets/couple_room.png';
-import SharedRoom from '../../assets/shared_room.png';
-import Item_1 from '../../assets/carrousel_item_1.png';
-import Item_2 from '../../assets/carrousel_item_2.png';
-import Item_3 from '../../assets/carrousel_item_3.png';
 import Lottie from 'react-lottie-player';
 import FirstloadingAnimation from '../../assets/loading_animation_1.json';
 import SecondloadingAnimation from '../../assets/loading_animation_2.json';
@@ -63,7 +56,7 @@ function LoginPage() {
         setErrorMessage('');
 
         try {
-            const response = await fetch('http://localhost:3001/api/cliente/login', {
+            const response = await fetch('http://localhost:3001/api/funcionario/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -123,7 +116,6 @@ function LoginPage() {
 
     return (
         <div className="login-App">
-            <NavBar fotos='galery-section' acomodacoes='acommodation-section' reservas='reservas-section' />
             <header className="login-header">
                 <div className="login-header-content">
                     <div className="login-header-text">
@@ -176,8 +168,7 @@ function LoginPage() {
                     />
                 </div>
             )}
-
-            <Footer />
+            
         </div>
     );
 }

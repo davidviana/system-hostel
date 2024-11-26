@@ -4,22 +4,14 @@
     font-family: 'Poppins';
 }
 
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    overflow-x: hidden;
-}
-
 .login-header {
     position: relative; 
     display: flex;
     flex-direction: row;
     justify-content: center;
     background-image: url('../../assets/header_background.png');
+    width: 100vw;
     background-size: cover;
-    padding: 50px;
     text-align: center;
     color: white;
 }
@@ -33,11 +25,9 @@ body {
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1;
+    height: 100vh;  
 }
 
-.login-navbar {
-    margin-top: 10px;
-}
 
 .login-header-text {
     position: relative;
@@ -250,7 +240,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.8); /* Leve transparência */
+    background-color: rgba(255, 255, 255, 0.8);
     z-index: 1000; 
 }
 
