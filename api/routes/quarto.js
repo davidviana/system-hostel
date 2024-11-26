@@ -4,13 +4,15 @@ const pool = require('../models/db');
 
 // GET: Listar quartos disponíveis
 router.get('/', async (req, res) => {
-    const status = 'disponivel'
+    // const status = 'disponível'
     try {
+        // const result = await pool.query(
+        //     'SELECT * FROM quarto WHERE status_quarto LIKE $1', [status]
+        // );
         const result = await pool.query(
-            'SELECT * FROM quarto WHERE status_quarto LIKE $1', [status]
+            'SELECT * FROM quarto ORDER BY numero'
         );
         res.json(result.rows);
-        console.log(result)
     } catch (err) {
         console.error('Erro ao buscar quartos:', err);
         res.status(500).send('Erro ao buscar quartos');
