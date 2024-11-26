@@ -1,27 +1,26 @@
-import React, { useEffect, useState } from 'react'; 
-import { useLocation } from 'react-router-dom'; 
-import './reserve.css'; // Para adicionar o estilo CSS
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import './reserve.css';
 
-function ReservePage() { 
-    const location = useLocation(); 
-    const { startDate, endDate, guestCount } = location.state || {}; 
+function ReservePage() {
+    const location = useLocation();
+    const { startDate, endDate, guestCount } = location.state || {}; // Dados recebidos da navegação
     const [rooms, setRooms] = useState([]);
 
-    useEffect(() => { 
-        if (1 === 1) { 
-            fetch(`http://localhost:3001/api/quarto/`, { 
-                method: 'GET', 
-                headers: { 
-                    'Content-Type': 'application/json' 
-                } 
-            }) 
-            .then(response => response.json()) 
-            .then(data => setRooms(data)) 
-            .catch(error => console.error('Erro ao buscar quartos:', error)); 
-        } 
+    useEffect(() => {
+        fetch(`http://localhost:3001/api/quarto/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => setRooms(data))
+            .catch(error => console.error('Erro ao buscar quartos:', error));
+
+        console.log("Datas:", startDate, endDate, "Hóspedes:", guestCount);
     }, [startDate, endDate, guestCount]);
 
-    // Função para determinar a classe do status
     const getRoomStatusClass = (status) => {
         switch (status) {
             case 'manutenção':
@@ -33,27 +32,35 @@ function ReservePage() {
         }
     };
 
-    return ( 
-        <div> 
-            <h2>Quartos Disponíveis</h2> 
-            {rooms.length > 0 ? ( 
+    const openModal = () => {
+        
+    }
+
+    const selectedRoom = (numero) => {
+        console.log("Quarto selecionado:", numero);
+    };
+
+    return (
+        <>
+            <h2 id='reserve-title'>Quartos Disponíveis</h2>
+            {rooms.length > 0 ? (
                 <div className="rooms-container">
                     {rooms.map(room => (
-                        <div className='room-card' key={room.numero}>
+                        <button className='room-card' key={room.numero} onClick={() => selectedRoom(room.numero)} >
                             <h2>Quarto: {room.numero}</h2>
                             <p>Status: <span className={getRoomStatusClass(room.status_quarto)}>{room.status_quarto}</span></p>
                             <p>Andar: {room.andar}°</p>
                             <p>{room.tipo}</p>
                             <p>Pessoas: {room.maximo_pessoas} hóspedes</p>
                             <p>Preço: R$ {room.preco}</p>
-                        </div>
+                        </button>
                     ))}
                 </div>
             ) : (
                 <p>Nenhum quarto disponível para as datas selecionadas.</p>
-            )} 
-        </div> 
-    ); 
+            )}
+        </>
+    );
 }
 
 export default ReservePage;

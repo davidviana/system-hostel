@@ -71,16 +71,17 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    padding: 30px;
 }
 
 .room-card {
-    width: 16%; /* Cada card ocupará 16% da largura da linha (6 quartos por linha) */
-    margin-bottom: 20px;
-    margin: 10px 0;
+    width: 28%;
+    margin: 10px 5px 10px 5px;
     border: 1px solid #ccc;
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    justify-content: left;
     background-color: #fff;
 }
 
@@ -108,4 +109,11 @@
 
 .manutencao {
     background-color: #ffee00;
+}
+
+#reserve-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
