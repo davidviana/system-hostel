@@ -13,6 +13,27 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.post('/login', async (req, res) => {
+    const { document, senha } = req.body; 
+
+    try {
+        const result = await pool.query('SELECT * FROM funcionario WHERE cpf = $1', [document]);
+        if (result.rows.length === 0) {
+            return res.status(401).send('Credenciais inválidas');
+        }
+
+        const user = result.rows[0];
+        // const hashedSenha = await descryptUsers(senha, user.salt_senha);
+        // if (hashedSenha !== user.senha_acesso) {
+        //     return res.status(401).send('Credenciais inválidas');
+        // }
+        res.json({ message: 'Login bem-sucedido', user });
+    } catch (err) {
+        console.error('Erro ao realizar login:', err);
+        res.status(500).send('Erro ao realizar login');
+    }
+});
+
 // POST: Adicionar um novo funcionario
 router.post('/', async (req, res) => {
     const { nome, cpf, email, telefone, cargo, senha_acesso } = req.body;
