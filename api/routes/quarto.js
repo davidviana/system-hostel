@@ -4,13 +4,10 @@ const pool = require('../models/db');
 
 // GET: Listar quartos disponíveis
 router.get('/', async (req, res) => {
-    // const status = 'disponível'
+    const status = 'disponível'
     try {
-        // const result = await pool.query(
-        //     'SELECT * FROM quarto WHERE status_quarto LIKE $1', [status]
-        // );
         const result = await pool.query(
-            'SELECT * FROM quarto ORDER BY numero'
+            'SELECT * FROM quarto WHERE status_quarto LIKE $1', [status]
         );
         res.json(result.rows);
     } catch (err) {
