@@ -13,6 +13,23 @@ router.get('/', async (req, res) => {
     }
 });
 
+// GET: Pegar só um cliente
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const result = await pool.query('SELECT nome FROM funcionario WHERE id = $1', [id]);
+        if (result.rowCount === 0) {
+            return res.status(404).send('Cliente não encontrado');
+        }
+
+        res.status(200).send({ nome: result.rows[0].nome });
+    } catch (err) {
+        console.error('Erro ao buscar clientes:', err);
+        res.status(500).send('Erro ao buscar cliente');
+    }
+});
+
 router.post('/login', async (req, res) => {
     const { document, senha } = req.body; 
 
