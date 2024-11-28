@@ -7,7 +7,7 @@ import './comp_reserve.css';
 function ReserveComponent() {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(null);
-    const [guestCount, setGuestCount] = useState(''); 
+    const [guestCount, setGuestCount] = useState('');
     const [modal, setModal] = useState(false);
 
     const navigate = useNavigate();
@@ -31,6 +31,11 @@ function ReserveComponent() {
     };
 
     const handleSearch = () => {
+        if (!startDate || !endDate || !guestCount) {
+            alert("Por favor, preencha todas as informações!");
+            return;
+        }
+
         navigate('/reserve', {
             state: { startDate, endDate, guestCount }
         });

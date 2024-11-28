@@ -1,11 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './reserve.css';
 
 function ReservePage() {
+    const navigate = useNavigate()
     const location = useLocation();
-    const { startDate, endDate, guestCount } = location.state || {}; // Dados recebidos da navegação
+    const { startDate, endDate, guestCount } = location.state || {};
+
+    const formatDate = (date) => {
+        if (!date) return '';
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${year}-${month}-${day}`;
+    };
+
     const [rooms, setRooms] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedRoom, setSelectedRoom] = useState(null); // Armazena o quarto selecionado
 
     useEffect(() => {
         fetch(`http://localhost:3001/api/quarto/`, {
@@ -17,8 +29,6 @@ function ReservePage() {
             .then(response => response.json())
             .then(data => setRooms(data))
             .catch(error => console.error('Erro ao buscar quartos:', error));
-
-        console.log("Datas:", startDate, endDate, "Hóspedes:", guestCount);
     }, [startDate, endDate, guestCount]);
 
     const getRoomStatusClass = (status) => {
@@ -32,12 +42,43 @@ function ReservePage() {
         }
     };
 
-    const openModal = () => {
-        
-    }
+    const handleRoomSelection = (room) => {
+        setSelectedRoom(room);
+        setIsModalOpen(true);
+    };
 
-    const selectedRoom = (numero) => {
-        console.log("Quarto selecionado:", numero);
+    const handleConfirmReservation = async (e) => {
+        let date = new Date();
+        var date_reserva = formatDate(date)
+
+        var data_checkin = formatDate(startDate)
+        var data_checkout = formatDate(endDate)
+        let cliente_id = localStorage.getItem("userId");
+        let room_number = selectedRoom.numero
+
+        try {
+            const response = await fetch('http://localhost:3001/api/reserva/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ date_reserva, data_checkin, data_checkout, cliente_id, room_number }),
+            });
+
+            if (response.ok) {
+                console.log("Reserva realizada com sucesso!");
+                navigate('/home')
+                setIsModalOpen(false);
+            } else {
+                console.error("Erro ao fazer a reserva:", response.status);
+            }
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+        }
+    };
+
+    const handleCancelReservation = () => {
+        setIsModalOpen(false);
     };
 
     return (
@@ -46,7 +87,7 @@ function ReservePage() {
             {rooms.length > 0 ? (
                 <div className="rooms-container">
                     {rooms.map(room => (
-                        <button className='room-card' key={room.numero} onClick={() => selectedRoom(room.numero)} >
+                        <button className='room-card' key={room.numero} onClick={() => handleRoomSelection(room)} >
                             <h2>Quarto: {room.numero}</h2>
                             <p>Status: <span className={getRoomStatusClass(room.status_quarto)}>{room.status_quarto}</span></p>
                             <p>Andar: {room.andar}°</p>
@@ -58,6 +99,17 @@ function ReservePage() {
                 </div>
             ) : (
                 <p>Nenhum quarto disponível para as datas selecionadas.</p>
+            )}
+
+            {isModalOpen && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h3>Confirmar Reserva</h3>
+                        <p>Você deseja reservar o quarto {selectedRoom.numero}?</p>
+                        <button onClick={handleConfirmReservation}>Confirmar</button>
+                        <button onClick={handleCancelReservation}>Cancelar</button>
+                    </div>
+                </div>
             )}
         </>
     );
