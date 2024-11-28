@@ -15,27 +15,28 @@ router.get('/', async (req, res) => {
 
 // POST: Adicionar uma nova reserva
 router.post('/', async (req, res) => {
-    const { data_reserva, status, cliente_id, quarto_id } = req.body;
+    const { date_reserva, data_checkin, data_checkout, cliente_id, room_number } = req.body;
+    
+    let status = 'ativa';
+
     try {
-        const result = await pool.query('INSERT INTO reserva (data_reserva, status, cliente_id, quarto_id) VALUES ($1, $2, $3, $4) RETURNING *', [data_reserva, status, cliente_id, quarto_id]);
-        res.status(201).json(result.rows[0]);
+        const resultQuarto = await pool.query('SELECT id FROM quarto WHERE numero = $1', [room_number]);
+        if (resultQuarto.rows.length === 0) {
+            return res.status(404).send('Quarto não encontrado');
+        }
+
+        const quarto_id = resultQuarto.rows[0].id;
+
+        const resultReserva = await pool.query(
+            'INSERT INTO reserva (data_reserva, data_checkin, data_checkout, status, cliente_id, quarto_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+            [date_reserva, data_checkin, data_checkout, status, cliente_id, quarto_id]
+        );
+
+        res.status(201).json(resultReserva.rows[0]);
     } catch (err) {
         console.error('Erro ao adicionar reserva:', err);
         res.status(400).send('Erro ao adicionar reserva');
     }
 });
-
-// POST reserva: não precisa adicionar a data de check-in-out, mas é necessário 
-// ADD check-in-out: adicionar um uma página de validar o check-in e validar o check-out
-// router.post('/api/reserva', async (req, res) => {
-//     const { id, data_reserva, status, cliente_id, quarto_id } = req.body;
-//     try {
-//         const result = await pool.query('INSERT INTO reserva (data_reserva, data_checkin, data_checkout, status, cliente_id, quarto_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [data_reserva, data_checkin, data_checkout, status, cliente_id, quarto_id]);
-//         res.status(201).json(result.rows[0]);
-//     } catch (err) {
-//         console.error('Erro ao adicionar reserva:', err);
-//         res.status(400).send('Erro ao adicionar reserva');
-//     }
-// });
 
 module.exports = router;
