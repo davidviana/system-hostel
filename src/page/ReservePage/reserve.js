@@ -1,59 +1,106 @@
-import React, { useEffect, useState } from 'react'; 
-import { useLocation } from 'react-router-dom'; 
-import './reserve.css'; // Para adicionar o estilo CSS
+import React, { useEffect, useState } from 'react';
+import './reserve.css';
 
-function ReservePage() { 
-    const location = useLocation(); 
-    const { startDate, endDate, guestCount } = location.state || {}; 
-    const [rooms, setRooms] = useState([]);
+function ReservePage() {
+    const [reserve, setReserve] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedRoom, setSelectedRoom] = useState(null);
 
-    useEffect(() => { 
-        if (1 === 1) { 
-            fetch(`http://localhost:3001/api/quarto/`, { 
-                method: 'GET', 
-                headers: { 
-                    'Content-Type': 'application/json' 
-                } 
-            }) 
-            .then(response => response.json()) 
-            .then(data => setRooms(data)) 
-            .catch(error => console.error('Erro ao buscar quartos:', error)); 
-        } 
-    }, [startDate, endDate, guestCount]);
+    useEffect(() => {
+        fetch(`http://localhost:3001/api/reserva/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => setReserve(data))
+            .catch(error => console.error('Erro ao buscar as reservas:', error));
+    }, []);
 
-    // Função para determinar a classe do status
+    const formatDate = (date) => {
+        if (!date) return '';
+        const d = new Date(date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+
     const getRoomStatusClass = (status) => {
         switch (status) {
-            case 'manutenção':
+            case 'ativa':
                 return 'status manutencao';
-            case 'ocupado':
+            case 'cancelada':
                 return 'status ocupado';
             default:
                 return 'status disponivel';
         }
     };
 
-    return ( 
-        <div> 
-            <h2>Quartos Disponíveis</h2> 
-            {rooms.length > 0 ? ( 
+    const handleRoomSelection = (room) => {
+        setSelectedRoom(room);
+        setIsModalOpen(true);
+    };
+
+    const handleConfirmReservation = async (e) => {
+        let status = 'confirmada'
+
+        try {
+            const response = await fetch('http://localhost:3001/api/reserva/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: reserve.id, status }),
+            });
+
+            if (response.ok) {
+                console.log("Reserva realizada com sucesso!");
+                setIsModalOpen(false);
+            } else {
+                console.error("Erro ao fazer a reserva:", response.status);
+            }
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+        }
+    };
+
+    const handleCancelReservation = () => {
+        setIsModalOpen(false);
+    };
+
+    return (
+        <div>
+            <h2>Reservas Disponíveis</h2>
+            {reserve.length > 0 ? (
                 <div className="rooms-container">
-                    {rooms.map(room => (
-                        <div className='room-card' key={room.numero}>
-                            <h2>Quarto: {room.numero}</h2>
-                            <p>Status: <span className={getRoomStatusClass(room.status_quarto)}>{room.status_quarto}</span></p>
-                            <p>Andar: {room.andar}°</p>
-                            <p>{room.tipo}</p>
-                            <p>Pessoas: {room.maximo_pessoas} hóspedes</p>
-                            <p>Preço: R$ {room.preco}</p>
-                        </div>
+                    {reserve.map(e => (
+                        <button className='room-card' key={e.id} onClick={() => handleRoomSelection(e)}>
+                            <h2>Reserva: {e.id}</h2>
+                            <p>Status: <span className={getRoomStatusClass(e.status)}>{e.status}</span></p>
+                            <p>Check-In: {formatDate(e.data_checkin)}</p>
+                            <p>Check-Out: {formatDate(e.data_checkout)}</p>
+                            <p>Valor: R$ {e.preco}</p>
+                        </button>
                     ))}
                 </div>
             ) : (
                 <p>Nenhum quarto disponível para as datas selecionadas.</p>
-            )} 
-        </div> 
-    ); 
+            )}
+
+            {isModalOpen && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h3>Confirmar Reserva</h3>
+                        <p>Você deseja reservar o quarto {selectedRoom.numero}?</p>
+                        <button onClick={handleConfirmReservation}>Confirmar</button>
+                        <button onClick={handleCancelReservation}>Cancelar</button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }
 
 export default ReservePage;

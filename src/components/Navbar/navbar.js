@@ -5,7 +5,7 @@ import Icon from '../../assets/default_profile_icon.png';
 import Up from '../../assets/chevron_up.png';
 import DeletePage from "../../page/DeletePage/delete";
 
-function NavBar({ fotos, acomodacoes, reservas }) {
+function NavBar({ funcionarios, quartos, reservas }) {
     const [userName, setUserName] = useState("");
     const [isRotated, setIsRotated] = useState(false);
     const [isMenuVisible, setIsMenuVisible] = useState(false);
@@ -20,7 +20,7 @@ function NavBar({ fotos, acomodacoes, reservas }) {
     const fetchUserName = async () => {
         const id = localStorage.getItem('userId');
 
-        const response = await fetch(`http://localhost:3001/api/cliente/${id}`, {
+        const response = await fetch(`http://localhost:3001/api/funcionario/${id}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });
@@ -59,18 +59,11 @@ function NavBar({ fotos, acomodacoes, reservas }) {
         setIsDeleteModalVisible(false);
     };
 
-    const scrollToSection = (sectionId) => {
-        const section = document.getElementById(sectionId);
-        if (section) {
-            section.scrollIntoView({ behavior: "smooth" });
-        }
-    };
-
     return (
         <div className="navbar">
             <div className="navbar-container">
-                <a href={fotos}>Fotos</a>
-                <a href={acomodacoes}>Acomodações</a>
+                <a href={funcionarios}>Funcionários</a>
+                <a href={quartos}>Quartos</a>
                 <a href={reservas}>Reservas</a>
             </div>
             {isLogged ? (
