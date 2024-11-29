@@ -16,6 +16,18 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/all_rooms', async (req, res) => {
+    try {
+        const result = await pool.query(
+            'SELECT * FROM quarto ORDER BY numero',
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Erro ao buscar quartos:', err);
+        res.status(500).send('Erro ao buscar quartos');
+    }
+});
+
 // POST: Adicionar um novo quarto
 router.post('/', async (req, res) => {
     const { numero, andar, tipo, preco, status } = req.body;
