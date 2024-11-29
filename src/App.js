@@ -6,6 +6,7 @@ import ForgotPasswordPage from './page/ForgotPasswordPage/forgot';
 import UpdateCadasterPage from './page/UpdateCadasterPage/update_cadaster';
 import DeletePage from './page/DeletePage/delete';
 import ReservePage from './page/ReservePage/reserve';
+import RoomPage from './page/RoomPage/room';
 
 import { useEffect, useState } from 'react';
 
@@ -36,6 +37,7 @@ function App() {
                     <Route path="/update" element={<UpdateCadasterPage />} />
                     <Route path="/delete" element={<DeletePage />} />
                     <Route path="/reserve" element={<ReservePage />} />
+                    <Route path="/room" element={<RoomPage />} />
                 </>
             ) : (
                 <>

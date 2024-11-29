@@ -43,23 +43,26 @@ function ReservePage() {
         setIsModalOpen(true);
     };
 
-    const handleConfirmReservation = async (e) => {
-        let status = 'confirmada'
+    const handleConfirmReservation = async () => {
+        if (!selectedRoom) return;
 
         try {
-            const response = await fetch('http://localhost:3001/api/reserva/', {
-                method: 'POST',
+            const response = await fetch('http://localhost:3001/api/reserva/confirmar', {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ id: reserve.id, status }),
+                body: JSON.stringify({
+                    reserva_id: selectedRoom.id,  // A reserva selecionada
+                    room_number: selectedRoom.quarto_id,  // O número do quarto (ou id)
+                }),
             });
 
             if (response.ok) {
-                console.log("Reserva realizada com sucesso!");
-                setIsModalOpen(false);
+                console.log("Reserva confirmada com sucesso!");
+                setIsModalOpen(false); // Fecha o modal após confirmação
             } else {
-                console.error("Erro ao fazer a reserva:", response.status);
+                console.error("Erro ao confirmar reserva:", response.status);
             }
         } catch (error) {
             console.error("Erro na requisição:", error);
@@ -67,7 +70,7 @@ function ReservePage() {
     };
 
     const handleCancelReservation = () => {
-        setIsModalOpen(false);
+        setIsModalOpen(false); // Apenas fecha o modal sem fazer nada
     };
 
     return (
@@ -75,13 +78,17 @@ function ReservePage() {
             <h2>Reservas Disponíveis</h2>
             {reserve.length > 0 ? (
                 <div className="rooms-container">
-                    {reserve.map(e => (
-                        <button className='room-card' key={e.id} onClick={() => handleRoomSelection(e)}>
+                    {reserve.map((e) => (
+                        <button
+                            className='room-card'
+                            key={e.id}
+                            onClick={() => handleRoomSelection(e)}
+                        >
                             <h2>Reserva: {e.id}</h2>
                             <p>Status: <span className={getRoomStatusClass(e.status)}>{e.status}</span></p>
                             <p>Check-In: {formatDate(e.data_checkin)}</p>
                             <p>Check-Out: {formatDate(e.data_checkout)}</p>
-                            <p>Valor: R$ {e.preco}</p>
+                            <p>Quarto: {e.quarto_id}</p>
                         </button>
                     ))}
                 </div>
@@ -89,11 +96,11 @@ function ReservePage() {
                 <p>Nenhum quarto disponível para as datas selecionadas.</p>
             )}
 
-            {isModalOpen && (
+            {isModalOpen && selectedRoom && (
                 <div className="modal">
                     <div className="modal-content">
                         <h3>Confirmar Reserva</h3>
-                        <p>Você deseja reservar o quarto {selectedRoom.numero}?</p>
+                        <p>Você deseja reservar o quarto {selectedRoom.quarto_id}?</p>
                         <button onClick={handleConfirmReservation}>Confirmar</button>
                         <button onClick={handleCancelReservation}>Cancelar</button>
                     </div>
