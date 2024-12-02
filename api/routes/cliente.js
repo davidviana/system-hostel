@@ -34,6 +34,23 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+// GET: Pegar só um cliente
+router.post('/check', async (req, res) => {
+    const { document } = req.body;
+
+    try {
+        const result = await pool.query('SELECT * FROM cliente WHERE cpf = $1', [document]);
+        if (result.rowCount === 0) {
+            return res.status(404).send('Cliente não encontrado');
+        }
+
+        res.status(200).send({ id: result.rows[0].id });
+    } catch (err) {
+        console.error('Erro ao buscar clientes:', err);
+        res.status(500).send('Erro ao buscar cliente');
+    }
+});
+
 // POST: Adicionar um novo cliente
 router.post('/', async (req, res) => {
     const { nome, document, email, bornDate, telefone, sexo, senha } = req.body;
