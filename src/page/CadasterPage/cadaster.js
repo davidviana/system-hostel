@@ -251,9 +251,6 @@ function CadasterPage() {
                             </label>
                             <button type="submit">Cadastrar</button>
                         </form>
-                        <p>
-                            Já possui conta? <a id="text-login" href="/login">Faça Login</a>
-                        </p>
                     </div>
                 </div>
             </div>
