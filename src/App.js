@@ -1,9 +1,11 @@
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import LoginPage from './page/LoginPage/login';
 import CadastroPage from './page/CadasterPage/cadaster';
+import CadasterColabPage from './page/CadasterColabPage/cadaster_colab';
 import HomePage from './page/HomePage/home';
 import ForgotPasswordPage from './page/ForgotPasswordPage/forgot';
 import UpdateCadasterPage from './page/UpdateCadasterPage/update_cadaster';
+import UpdateCadasterColabPage from './page/UpdateCadasterColabPage/update_cadaster_colab';
 import DeletePage from './page/DeletePage/delete';
 import ReservePage from './page/ReservePage/reserve';
 import RoomPage from './page/RoomPage/room';
@@ -34,7 +36,10 @@ function App() {
                 <>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/home" element={<HomePage />} />
+                    <Route path="/cadaster" element={<CadastroPage />} />
+                    <Route path="/cadaster_colab" element={<CadasterColabPage />} />
                     <Route path="/update" element={<UpdateCadasterPage />} />
+                    <Route path="/update_colab" element={<UpdateCadasterColabPage />} />
                     <Route path="/delete" element={<DeletePage />} />
                     <Route path="/reserve" element={<ReservePage />} />
                     <Route path="/room" element={<RoomPage />} />
