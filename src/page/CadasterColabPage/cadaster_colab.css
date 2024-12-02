@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    font-family: 'Poppins';
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+
+}
+
+.header {
+    position: relative; 
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-image: url('../../assets/header_background.png');
+    background-size: cover;
+    height: 100vh;
+    text-align: center;
+    color: white;
+    overflow-y: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.header-text {
+    position: relative;
+    z-index: 2;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    align-items: center;
+    max-width: 1200px;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    color: #ffffff;
+    line-height: 0;
+}
+
+.header-text > h1 {
+    font-size: 100px;
+    font-weight: 500;
+}
+
+.header-text > p {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+#header-span {
+    height: 50px;
+    border-left: 4px solid #7A2388;
+    padding: 0 10px;
+}
+
+.container-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.container-register-form {
+    width: 50%;
+    z-index: 2;
+}
+
+.register-form {
+    background-color: #ffffffcc;
+    width: 80%;
+    padding: 0 20px;
+    border-radius: 10px;
+    display: inline-block;
+    text-align: left;
+    color: black;
+    scale: 0.91;
+}
+
+.register-form form input {
+    width: 95%;
+    padding: 8px 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.cadaster-stack {
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+}
+
+.register-form form button {
+    align-items: center;
+    width: 50%;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #9400d3;
+    color: white;
+    font-weight: 500;
+    border: 2px solid #fff;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.register-form form button:hover {
+    transition: background-color 0.1s ease-in-out;
+    background-color: #ffffff;
+    font-weight: 500;
+    color: #bb19db;
+}
+
+.register-form a {
+    text-decoration: none;
+    color: #9400b1;
+}
+
+#text-login {
+    display: inline-block;
+    position: relative;
+}
+
+#text-login::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 100%;
+    background: #9400b1;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease-in-out; 
+}
+
+#text-login:hover::after {
+    transform: scaleX(1);
+}
+
+.error {
+    z-index: 5;
+    position: absolute;
+    top: 10px;
+    right: 0;
+    background-color: rgb(226, 94, 94);
+    border-radius: 5px;
+    color: white;
+    width: 400px;
+    height: 30px;
+}
+
+.stacked-textfield {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.stacked-textfield > label {
+    margin: 0 10px 0 0;
+}
+
+input, select {
+    outline: none;
+}
+
+#drop-list {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+
+#drop-list > select {
+    width: 200px;
+    padding: 8px 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
