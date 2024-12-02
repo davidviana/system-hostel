@@ -7,10 +7,11 @@ import DeletePage from "../../page/DeletePage/delete";
 
 function NavBar({ funcionarios, quartos, reservas }) {
     const [userName, setUserName] = useState("");
+    const [role, setRole] = useState("");
     const [isRotated, setIsRotated] = useState(false);
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const profileMenu = () => {
         setIsMenuVisible(!isMenuVisible);
@@ -27,10 +28,12 @@ function NavBar({ funcionarios, quartos, reservas }) {
 
         if (response.ok) {
             const data = await response.json();
-            let first_name = data.nome.split(' ')[0]
-            let last_name =  data.nome.split(' ').slice(-1)[0]
-            const nome_completo = first_name + ' ' + last_name
+            let first_name = data.nome.split(' ')[0];
+            let last_name = data.nome.split(' ').slice(-1)[0];
+            const nome_completo = first_name + ' ' + last_name;
+            const cargo = data.cargo;
             setUserName(nome_completo);
+            setRole(cargo);
         } else {
             console.log('Erro ao puxar o nome do usuário');
         }
@@ -46,14 +49,13 @@ function NavBar({ funcionarios, quartos, reservas }) {
 
     const openDeleteModal = () => {
         setIsDeleteModalVisible(true);
-        setIsMenuVisible(false)
+        setIsMenuVisible(false);
     };
 
     const closeSession = () => {
-        localStorage.clear()
-        window.location.reload(true)
-        navigate('/')
-    }
+        localStorage.clear();
+        navigate('/');
+    };
 
     const closeDeleteModal = () => {
         setIsDeleteModalVisible(false);
@@ -71,20 +73,39 @@ function NavBar({ funcionarios, quartos, reservas }) {
                     <div className="profile-button">
                         <div className="stacked-icon">
                             <img className='icon-default' src={Icon} alt="default-icon" />
-                            <p>Olá, {userName}</p>
+                            <div id='nome-role'>
+                                <p>Olá, {userName}</p>
+                            </div>
                         </div>
                         <button className='chevron' onClick={profileMenu}>
                             <img className={`chevron-icon ${isRotated ? 'rotate' : ''}`} src={Up} alt="chevron" />
                         </button>
                     </div>
                     {isMenuVisible && (
-                        <div className="menu">
-                            <ul>
-                                <Link className="menu-item" to='/update'><li>Atualizar cadastro</li></Link>
-                                <Link className="menu-item" onClick={openDeleteModal}><li>Deletar cadastro</li></Link>
-                                <Link className="menu-item" onClick={closeSession}><li>Sair</li></Link>
-                            </ul>
-                        </div>
+                        (role === 'Gerente' || role === 'Tecníco de TI') ? (
+                            <div className="menu">
+                                <ul>
+                                    <Link className="menu-item" to='/cadaster-colab'><li>Cadastrar funcionário</li></Link>
+                                    <Link className="menu-item" to='/update-colab'><li>Atualizar funcionário</li></Link>
+                                    <Link className="menu-item" to='/cadaster-colab'><li>Deletar funcionário</li></Link>
+
+                                    <Link className="menu-item" to='/cadaster'><li>Criar um cadastro</li></Link>
+                                    <Link className="menu-item" to='/update'><li>Atualizar um cadastro</li></Link>
+                                    <Link className="menu-item" onClick={openDeleteModal}><li>Deletar o cadastro</li></Link>
+                                    <Link className="menu-item" onClick={closeSession}><li>Sair</li></Link>
+                                    <Link className="menu-item" onClick={closeSession}><li>Desligar o sistema</li></Link>
+                                </ul>
+                            </div>
+                        ) : (
+                            <div className="menu">
+                                <ul>
+                                    <Link className="menu-item" to='/cadaster'><li>Criar o cadastro</li></Link>
+                                    <Link className="menu-item" to='/update'><li>Atualizar o cadastro</li></Link>
+                                    <Link className="menu-item" onClick={openDeleteModal}><li>Deletar o cadastro</li></Link>
+                                    <Link className="menu-item" onClick={closeSession}><li>Sair</li></Link>
+                                </ul>
+                            </div>
+                        )
                     )}
                 </div>
             ) : (

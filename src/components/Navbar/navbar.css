@@ -177,6 +177,7 @@ body {
 .menu-item {
     text-decoration: none;
     color: #000;
+    font-size: 15px;
 }
 
 .modal-overlay {
