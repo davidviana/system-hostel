@@ -14,6 +14,19 @@ router.get('/', async (req, res) => {
     }
 });
 
+// GET: Listar todas as reservas, por cliente
+router.get('/:id', async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const result = await pool.query('SELECT * FROM reserva WHERE cliente_id = $1 ORDER BY id DESC', [id]);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Erro ao buscar reservas:', err);
+        res.status(500).send('Erro ao buscar reservas');
+    }
+});
+
 // POST: Adicionar uma nova reserva
 router.post('/', async (req, res) => {
     const { date_reserva, data_checkin, data_checkout, cliente_id, room_number } = req.body;
