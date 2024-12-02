@@ -14,10 +14,9 @@ import './home.css'
 import { useNavigate } from "react-router-dom";
 
 function HomePage() {
-    const navegate = useNavigate()
     return (
         <div className="login-App">
-            <NavBar fotos='galery-section' acomodacoes='acommodation-section' reservas='/reserve' />
+            <NavBar fotos='galery-section' acomodacoes='acommodation-section' reservas='/my_reserves' />
             <header className="login-header">
                 <div className="login-header-content">
                     <div className="login-header-text" id='teste'>
@@ -39,7 +38,7 @@ function HomePage() {
 
             <section className="login-banner" id='reservas-section'>
                 <h2>Uma super experiência para contar!</h2>
-                <button onClick={navegate('/reserve')}>Reservar Agora</button>
+                <button>Reservar Agora</button>
             </section>
 
             <section className="login-accommodations" id='accomodations-section'>
