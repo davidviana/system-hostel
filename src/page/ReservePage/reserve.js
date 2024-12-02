@@ -69,8 +69,30 @@ function ReservePage() {
         }
     };
 
-    const handleCancelReservation = () => {
-        setIsModalOpen(false); // Apenas fecha o modal sem fazer nada
+    const handleCancelReservation = async () => {
+        if (!selectedRoom) return;
+
+        try {
+            const response = await fetch('http://localhost:3001/api/reserva/cancelar', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    reserva_id: selectedRoom.id,
+                    room_number: selectedRoom.quarto_id,
+                }),
+            });
+
+            if (response.ok) {
+                console.log("Reserva cancelada com sucesso!");
+                setIsModalOpen(false);
+            } else {
+                console.error("Erro ao confirmar reserva:", response.status);
+            }
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+        }
     };
 
     return (
