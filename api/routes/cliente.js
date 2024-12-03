@@ -34,7 +34,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// GET: Pegar só um cliente
+// POST: Pegar só um cliente
 router.post('/check', async (req, res) => {
     const { document } = req.body;
 
