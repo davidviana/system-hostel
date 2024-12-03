@@ -1,14 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-router.use(express.json()); // Necessário para interpretar JSON no corpo da requisição
+router.use(express.json());
 
 router.post('/', (req, res) => {
-    const { role } = req.body; // Pega o role do corpo da requisição
+    const { role } = req.body;
 
-    console.log(role);
-
-    if (role === 'gerente' || role === 'tecnico') {
+    if (role === 'Gerente' || role === 'Tecníco de TI') {
         setTimeout(() => {
             console.log('Encerrando API...');
             res.send({ message: 'Encerrando API...' });
