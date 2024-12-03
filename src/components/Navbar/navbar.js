@@ -109,9 +109,9 @@ function NavBar({ funcionarios, quartos, reservas }) {
                                     <Link className="menu-item" to='/update_colab'><li>Atualizar funcionário</li></Link>
                                     <Link className="menu-item" to='/delete_colab'><li>Deletar funcionário</li></Link>
                                     <p>Clientes</p>
-                                    <Link className="menu-item" to='/cadaster'><li>Criar um cadastro</li></Link>
-                                    <Link className="menu-item" to='/update'><li>Atualizar um cadastro</li></Link>
-                                    <Link className="menu-item" onClick={openDeleteModal}><li>Deletar o cadastro</li></Link>
+                                    <Link className="menu-item" to='/cadaster'><li>Cadastrar cliente</li></Link>
+                                    <Link className="menu-item" to='/update'><li>Atualizar cliente</li></Link>
+                                    <Link className="menu-item" onClick={openDeleteModal}><li>Deletar cliente</li></Link>
                                     <p>Sistema</p>
                                     <Link className="menu-item" onClick={closeSession}><li>Sair</li></Link>
                                     <Link className="menu-item" onClick={shotDown}><li>Desligar o sistema</li></Link>
