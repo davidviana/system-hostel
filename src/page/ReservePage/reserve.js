@@ -7,6 +7,56 @@ function ReservePage() {
     const [selectedRoom, setSelectedRoom] = useState(null);
 
     useEffect(() => {
+        // Conectar ao WebSocket
+        const socket = new WebSocket('ws://localhost:3001');
+    
+        socket.onopen = () => {
+            console.log('Conexão WebSocket aberta');
+        };
+    
+        // Quando uma mensagem for recebida do servidor WebSocket
+        socket.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            console.log('Mensagem recebida do servidor WebSocket:', message);
+    
+            if (message.type === 'reservationUpdate') {
+                console.log('Mensagem de atualização de reserva recebida', message);
+                setReserve((prevReserve) => {
+                    console.log('Estado anterior:', prevReserve);
+                    if (message.status === 'created') {
+                        return [
+                            ...prevReserve,
+                            { id: message.roomId, status: 'ativa', quarto_id: message.roomNumber }
+                        ];
+                    } else if (message.status === 'canceled') {
+                        return prevReserve.map((reserva) =>
+                            reserva.quarto_id === message.roomId
+                                ? { ...reserva, status: 'cancelada' }
+                                : reserva
+                        );
+                    } else if (message.status === 'confirmed') {
+                        return prevReserve.map((reserva) =>
+                            reserva.quarto_id === message.roomId
+                                ? { ...reserva, status: 'concluída' }
+                                : reserva
+                        );
+                    }
+                    return prevReserve;
+                });
+            }
+        };
+    
+        // Quando a conexão WebSocket for fechada
+        socket.onclose = () => {
+            console.log('Conexão WebSocket fechada');
+        };
+    
+        // Caso ocorra um erro no WebSocket
+        socket.onerror = (error) => {
+            console.error('Erro no WebSocket:', error);
+        };
+    
+        // Buscar as reservas iniciais
         fetch(`http://localhost:3001/api/reserva/`, {
             method: 'GET',
             headers: {
@@ -16,7 +66,12 @@ function ReservePage() {
             .then(response => response.json())
             .then(data => setReserve(data))
             .catch(error => console.error('Erro ao buscar as reservas:', error));
-    }, []);
+    
+        // Limpeza: Fechar a conexão WebSocket quando o componente for desmontado
+        return () => {
+            socket.close();
+        };
+    }, []); // Dependência vazia garante que a configuração inicial seja feita apenas uma vez.
 
     const formatDate = (date) => {
         if (!date) return '';
@@ -102,8 +157,8 @@ function ReservePage() {
                 <div className="rooms-container">
                     {reserve.map((e) => (
                         <button
-                            className='room-card'
                             key={e.id}
+                            className='room-card'
                             onClick={() => handleRoomSelection(e)}
                         >
                             <h2>Reserva: {e.id}</h2>
