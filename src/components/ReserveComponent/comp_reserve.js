@@ -62,7 +62,6 @@ function ReserveComponent() {
                         <option value="1">1 Hóspede</option>
                         <option value="2">2 Hóspedes</option>
                         <option value="3">3 Hóspedes</option>
-                        <option value="4">4 Hóspedes</option>
                     </select>
                 </div>
 
