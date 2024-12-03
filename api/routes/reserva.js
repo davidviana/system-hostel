@@ -9,7 +9,6 @@ router.get('/', async (req, res) => {
         const result = await pool.query('SELECT * FROM reserva ORDER BY id DESC');
         res.json(result.rows);
     } catch (err) {
-        console.error('Erro ao buscar reservas:', err);
         res.status(500).send('Erro ao buscar reservas');
     }
 });
@@ -22,7 +21,6 @@ router.get('/:id', async (req, res) => {
         const result = await pool.query('SELECT * FROM reserva WHERE cliente_id = $1 ORDER BY id DESC', [id]);
         res.json(result.rows);
     } catch (err) {
-        console.error('Erro ao buscar reservas:', err);
         res.status(500).send('Erro ao buscar reservas');
     }
 });
@@ -51,6 +49,8 @@ router.post('/', async (req, res) => {
         broadcastUpdate({
             type: 'reservationUpdate',
             status: 'created',
+            dataCheckin: data_checkin,
+            dataCheckout: data_checkout,
             roomNumber: room_number
         });
 
@@ -63,44 +63,40 @@ router.post('/', async (req, res) => {
 
 // PUT: Cancelar uma reserva
 router.put('/cancelar', async (req, res) => {
-    const { reserva_id, quarto_id } = req.body;
+    const { reserva_id, room_number } = req.body;
 
     try {
-        await pool.query('UPDATE quarto SET status_quarto = $1 WHERE id = $2', ['disponível', quarto_id]);
+        await pool.query('UPDATE quarto SET status_quarto = $1 WHERE id = $2', ['disponível', room_number]);
         const resultReserva = await pool.query('UPDATE reserva SET status = $1 WHERE id = $2', ['cancelada', reserva_id]);
 
-        // Envia uma atualização via WebSocket para todos os clientes conectados
         broadcastUpdate({
             type: 'reservationUpdate',
             status: 'canceled',
-            roomId: quarto_id
+            roomId: room_number
         });
 
         res.status(201).json(resultReserva.rows[0]);
     } catch (err) {
-        console.error('Erro ao cancelar reserva:', err);
         res.status(400).send('Erro ao cancelar reserva');
     }
 });
 
 // PUT: Confirmar uma reserva
 router.put('/confirmar', async (req, res) => {
-    const { reserva_id, quarto_id } = req.body;
+    const { reserva_id, room_number } = req.body;
 
     try {
-        await pool.query('UPDATE quarto SET status_quarto = $1 WHERE id = $2', ['ocupado', quarto_id]);
+        await pool.query('UPDATE quarto SET status_quarto = $1 WHERE id = $2', ['ocupado', room_number]);
         const resultReserva = await pool.query('UPDATE reserva SET status = $1 WHERE id = $2', ['conclu¡da', reserva_id]);
 
-        // Envia uma atualização via WebSocket para todos os clientes conectados
         broadcastUpdate({
             type: 'reservationUpdate',
             status: 'confirmed',
-            roomId: quarto_id
+            roomId: room_number
         });
 
         res.status(201).json(resultReserva.rows[0]);
     } catch (err) {
-        console.error('Erro ao confirmar reserva:', err);
         res.status(400).send('Erro ao confirmar reserva');
     }
 });

@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
     const status = 'disponível'
     try {
         const result = await pool.query(
-            'SELECT * FROM quarto WHERE status_quarto LIKE $1', [status]
+            'SELECT * FROM quarto WHERE status_quarto LIKE $1 ORDER BY numero', [status]
         );
         res.json(result.rows);
     } catch (err) {
