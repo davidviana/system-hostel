@@ -6,6 +6,8 @@ function ReservePage() {
     const navigate = useNavigate()
     const location = useLocation();
     const { startDate, endDate, guestCount } = location.state || {};
+    const [price, setPrice] = useState()
+    let dias_de_estadia = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
 
     const formatDate = (date) => {
         if (!date) return '';
@@ -17,7 +19,7 @@ function ReservePage() {
 
     const [rooms, setRooms] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedRoom, setSelectedRoom] = useState(null); // Armazena o quarto selecionado
+    const [selectedRoom, setSelectedRoom] = useState(null);
 
     useEffect(() => {
         fetch(`http://localhost:3001/api/quarto/`, {
@@ -44,17 +46,18 @@ function ReservePage() {
 
     const handleRoomSelection = (room) => {
         setSelectedRoom(room);
+        setPrice(room.preco)
         setIsModalOpen(true);
     };
 
     const handleConfirmReservation = async (e) => {
         let date = new Date();
-        var date_reserva = formatDate(date)
+        var date_reserva = formatDate(date);
 
-        var data_checkin = formatDate(startDate)
-        var data_checkout = formatDate(endDate)
+        var data_checkin = formatDate(startDate);
+        var data_checkout = formatDate(endDate);
         let cliente_id = localStorage.getItem("userId");
-        let room_number = selectedRoom.numero
+        let room_number = selectedRoom.numero;
 
         try {
             const response = await fetch('http://localhost:3001/api/reserva/', {
@@ -62,12 +65,28 @@ function ReservePage() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ date_reserva, data_checkin, data_checkout, cliente_id, room_number }),
+                body: JSON.stringify({ date_reserva, data_checkin, data_checkout, cliente_id, room_number, dias_de_estadia }),
             });
 
             if (response.ok) {
                 console.log("Reserva realizada com sucesso!");
-                navigate('/home')
+
+                const socket = new WebSocket('ws://localhost:3001');
+                socket.onopen = () => {
+                    const message = {
+                        type: 'reservationUpdate',
+                        status: 'created',
+                        dataCheckin: data_checkin,
+                        dataCheckout: data_checkout,
+                        roomId: room_number,
+                        roomNumber: selectedRoom.numero,
+                        totalValue: 'default'
+                    };
+                    socket.send(JSON.stringify(message));
+                    socket.close();
+                };
+
+                navigate('/home');
                 setIsModalOpen(false);
             } else {
                 console.error("Erro ao fazer a reserva:", response.status);
@@ -104,8 +123,13 @@ function ReservePage() {
             {isModalOpen && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h3>Confirmar Reserva</h3>
-                        <p>Você deseja reservar o quarto {selectedRoom.numero}?</p>
+                        <div id='modal-text-contente'>
+                            <h3>Confirmar Reserva</h3>
+                            <p>Você deseja prosseguir a reserva nas seguintes condições:</p>
+                            <p><b>Quarto:</b> {selectedRoom.numero} |  <b>Período:</b> {dias_de_estadia} dia(s)</p>
+                            <p><b>Valor Total:</b> R${price * dias_de_estadia},00 </p>
+                            <span id='alert'>* O pagamento ocorrerá no local, no momento do check-in</span>
+                        </div>
                         <button onClick={handleConfirmReservation}>Confirmar</button>
                         <button onClick={handleCancelReservation}>Cancelar</button>
                     </div>

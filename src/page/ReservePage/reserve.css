@@ -144,7 +144,7 @@
     cursor: pointer;
 }
 
-.modal button:first-child {
+.modal button {
     background-color: green;
     color: white;
 }
@@ -152,4 +152,13 @@
 .modal button:last-child {
     background-color: red;
     color: white;
+}
+
+#modal-text-contente {
+    margin-bottom: 20px;
+}
+
+#alert {
+    font-size: 10px;
+    color: #d40202;
 }
