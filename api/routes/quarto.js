@@ -16,6 +16,7 @@ router.get('/', async (req, res) => {
     }
 });
 
+// GET: Listar todos os quartos
 router.get('/all_rooms', async (req, res) => {
     try {
         const result = await pool.query(
