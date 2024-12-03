@@ -61,6 +61,25 @@ function NavBar({ funcionarios, quartos, reservas }) {
         setIsDeleteModalVisible(false);
     };
 
+    const shotDown = async () => {
+        const response = await fetch('http://localhost:3001/api/shutdown', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ role }),
+        });
+
+        if (response.ok) {
+            setTimeout(() => {
+                localStorage.clear()
+                navigate('/')
+            }, 1000);
+        } else {
+            return 'Error'
+        }
+    }
+
     return (
         <div className="navbar">
             <div className="navbar-container">
@@ -85,15 +104,17 @@ function NavBar({ funcionarios, quartos, reservas }) {
                         (role === 'Gerente' || role === 'Tecníco de TI') ? (
                             <div className="menu">
                                 <ul>
-                                    <Link className="menu-item" to='/cadaster-colab'><li>Cadastrar funcionário</li></Link>
-                                    <Link className="menu-item" to='/update-colab'><li>Atualizar funcionário</li></Link>
-                                    <Link className="menu-item" to='/cadaster-colab'><li>Deletar funcionário</li></Link>
-
+                                    <p>Funcionários</p>
+                                    <Link className="menu-item" to='/cadaster_colab'><li>Cadastrar funcionário</li></Link>
+                                    <Link className="menu-item" to='/update_colab'><li>Atualizar funcionário</li></Link>
+                                    <Link className="menu-item" to='/delete_colab'><li>Deletar funcionário</li></Link>
+                                    <p>Clientes</p>
                                     <Link className="menu-item" to='/cadaster'><li>Criar um cadastro</li></Link>
                                     <Link className="menu-item" to='/update'><li>Atualizar um cadastro</li></Link>
                                     <Link className="menu-item" onClick={openDeleteModal}><li>Deletar o cadastro</li></Link>
+                                    <p>Sistema</p>
                                     <Link className="menu-item" onClick={closeSession}><li>Sair</li></Link>
-                                    <Link className="menu-item" onClick={closeSession}><li>Desligar o sistema</li></Link>
+                                    <Link className="menu-item" onClick={shotDown}><li>Desligar o sistema</li></Link>
                                 </ul>
                             </div>
                         ) : (

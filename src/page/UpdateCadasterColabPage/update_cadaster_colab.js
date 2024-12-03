@@ -75,7 +75,7 @@ function UpdateCadasterColabPage() {
     };
 
     const checkCadaster = async () => {
-        const response = await fetch(`http://localhost:3001/api/cliente/check`, {
+        const response = await fetch(`http://localhost:3001/api/funcionario/check`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ function UpdateCadasterColabPage() {
 
         setFormErrors('');
 
-        const response = await fetch('http://localhost:3001/api/cliente/update', {
+        const response = await fetch('http://localhost:3001/api/funcionario/update', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

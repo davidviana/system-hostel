@@ -9,6 +9,7 @@ function CadasterColabPage() {
     const [document, setDocument] = useState('');
     const [bornDate, setBorndate] = useState('');
     const [telefone, setTelefone] = useState('');
+    const [role, setRole] = useState('');
     const [sexo, setSexo] = useState('');
     const [senha, setSenha] = useState('');
     const [formErrors, setFormErrors] = useState('');
@@ -86,10 +87,8 @@ function CadasterColabPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        console.log(nome, document, email, bornDate, telefone, sexo, senha)
 
-        if (!nome || !email || !document || !bornDate || !telefone || !senha || !sexo) {
+        if (!nome || !email || !document || !bornDate || !telefone || !role || !senha || !sexo) {
             setFormErrors('Todos os campos devem ser preenchidos.');
             return;
         }
@@ -121,12 +120,15 @@ function CadasterColabPage() {
 
         setFormErrors('');
 
-        const response = await fetch('http://localhost:3001/api/cliente', {
+
+        console.log(nome, document, email, bornDate, telefone, role, sexo, senha)
+
+        const response = await fetch('http://localhost:3001/api/funcionario', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ nome, document, email, bornDate, telefone, sexo, senha }),
+            body: JSON.stringify({ nome, document, email, bornDate, telefone, role, sexo, senha }),
         });
 
         if (response.ok) {
@@ -139,9 +141,8 @@ function CadasterColabPage() {
             setTelefone('');
             setSexo('');
             setSenha('');
-            navigate('/login')
+            navigate('/')
         } else {
-            console.error('Erro ao enviar o formulário');
             setFormErrors('Erro ao enviar o formulário');
         }
     };
@@ -157,7 +158,7 @@ function CadasterColabPage() {
                     </span>
                 </div>
                 <div className="container-register-form">
-                {formErrors && <p className="error">{formErrors}</p>}
+                    {formErrors && <p className="error">{formErrors}</p>}
                     <div className="register-form">
                         <h2>Cadastre-se</h2>
                         <form onSubmit={handleSubmit}>
@@ -199,20 +200,35 @@ function CadasterColabPage() {
                                 </label>
                             </div>
 
-                            <label>
-                                Data de Nascimento
-                                <InputMask
-                                    mask="99/99/9999"
-                                    placeholder="Digite sua data de nascimento"
-                                    value={bornDate}
-                                    onChange={(e) => setBorndate(e.target.value)}
-                                    onBlur={() => !validateAge(bornDate) && setFormErrors('Data de nascimento inválida ou menor de idade.')}
-                                    required
-                                >
-                                    {(inputProps) => <input {...inputProps} />}
-                                </InputMask>
-                            </label>
-
+                            <div className="stacked-textfield">
+                                <label>
+                                    Data de Nascimento
+                                    <InputMask
+                                        mask="99/99/9999"
+                                        placeholder="Digite sua data de nascimento"
+                                        value={bornDate}
+                                        onChange={(e) => setBorndate(e.target.value)}
+                                        onBlur={() => !validateAge(bornDate) && setFormErrors('Data de nascimento inválida ou menor de idade.')}
+                                        required
+                                    >
+                                        {(inputProps) => <input {...inputProps} />}
+                                    </InputMask>
+                                </label>
+                                <label id="drop-list">
+                                    Cargo
+                                    <select
+                                        value={role}
+                                        onChange={(e) => setRole(e.target.value)}
+                                        required>
+                                        <option value="">Selecione</option>
+                                        <option value="Gerente">Gerente</option>
+                                        <option value="Tecníco de TI">Tecníco de TI</option>
+                                        <option value="Recepção">Recepção</option>
+                                        <option value="Limpeza">Limpeza</option>
+                                        <option value="Administrativo">Administrativo</option>
+                                    </select>
+                                </label>
+                            </div>
                             <div className="stacked-textfield">
                                 <label>
                                     Telefone

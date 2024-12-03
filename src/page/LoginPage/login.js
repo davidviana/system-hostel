@@ -71,7 +71,7 @@ function LoginPage() {
 
             const data = await response.json();
 
-            localStorage.setItem('userId', data.user.id);
+            localStorage.setItem('userId', data.colab.id);
             localStorage.setItem('isLogged', 'true');
             localStorage.setItem('loginTime', Date.now());
 
