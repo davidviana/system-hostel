@@ -120,9 +120,6 @@ function CadasterColabPage() {
 
         setFormErrors('');
 
-
-        console.log(nome, document, email, bornDate, telefone, role, sexo, senha)
-
         const response = await fetch('http://localhost:3001/api/funcionario', {
             method: 'POST',
             headers: {
@@ -133,7 +130,6 @@ function CadasterColabPage() {
 
         if (response.ok) {
             const data = await response.json();
-            console.log('Formulário enviado com sucesso:', data);
             setNome('');
             setEmail('');
             setDocument('');

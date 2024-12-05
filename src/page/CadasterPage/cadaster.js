@@ -86,8 +86,6 @@ function CadasterPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        console.log(nome, document, email, bornDate, telefone, sexo, senha)
 
         if (!nome || !email || !document || !bornDate || !telefone || !senha || !sexo) {
             setFormErrors('Todos os campos devem ser preenchidos.');
@@ -131,7 +129,6 @@ function CadasterPage() {
 
         if (response.ok) {
             const data = await response.json();
-            console.log('Formulário enviado com sucesso:', data);
             setNome('');
             setEmail('');
             setDocument('');
@@ -139,7 +136,7 @@ function CadasterPage() {
             setTelefone('');
             setSexo('');
             setSenha('');
-            navigate('/login')
+            navigate('/home')
         } else {
             console.error('Erro ao enviar o formulário');
             setFormErrors('Erro ao enviar o formulário');

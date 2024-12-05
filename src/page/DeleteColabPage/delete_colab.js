@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import InputMask from 'react-input-mask';
-import './delete.css'
+import './delete_colab.css'
 
-function DeletePage({ closeModal }) {
+function DeleteColabPage({ closeModal }) {
     const [step, setStep] = useState(0);
     const [document, setDocument] = useState('');
     const [formErrors, setFormErrors] = useState('');
@@ -46,7 +46,7 @@ function DeletePage({ closeModal }) {
     }
 
     const checkCadaster = async () => {
-        const response = await fetch(`http://localhost:3001/api/cliente/check`, {
+        const response = await fetch(`http://localhost:3001/api/funcionario/check`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ function DeletePage({ closeModal }) {
 
         if (response.ok) {
             const data = await response.json();
-            localStorage.setItem("consumerId", data.id)
+            localStorage.setItem("colabId", data.id)
             var current_step = step
             var next_step = current_step + 1
             setStep(next_step);
@@ -66,16 +66,15 @@ function DeletePage({ closeModal }) {
     }
 
     const confirmDelete = async () => {
-        const consumerId = localStorage.getItem('consumerId');
-
-        const response = await fetch(`http://localhost:3001/api/cliente/${consumerId}`, {
+        const colabId = localStorage.getItem('colabId');
+        const response = await fetch(`http://localhost:3001/api/funcionario/${colabId}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' }
         });
 
         if (response.ok) {
             closeModal();
-            localStorage.setItem('consumerId', '')
+            localStorage.setItem('colabId', '')
         } else {
             setFormErrors('Erro ao deletar o cadastro')
         }
@@ -85,7 +84,7 @@ function DeletePage({ closeModal }) {
         <div className="modal">
             {step === 0 && (
                 <div className="modal-content">
-                    <h3>Informe o CPF do cliente:</h3>
+                    <h3>Informe o CPF do funcionario:</h3>
                     <label>
                         CPF
                         <InputMask
@@ -119,4 +118,4 @@ function DeletePage({ closeModal }) {
     );
 }
 
-export default DeletePage;
+export default DeleteColabPage;
