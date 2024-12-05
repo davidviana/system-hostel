@@ -122,13 +122,11 @@ function UpdateCadasterColabPage() {
 
         if (response.ok) {
             const data = await response.json();
-            console.log('Cadastro atualizado com sucesso:', data);
             setNome('');
             setEmail('');
             setTelefone('');
             navigate('/');
         } else {
-            console.error('Erro ao atualizar o cadastro');
             setFormErrors('Erro ao atualizar o cadastro');
         }
     };

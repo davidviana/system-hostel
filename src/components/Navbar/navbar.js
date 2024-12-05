@@ -4,6 +4,7 @@ import "./navbar.css";
 import Icon from '../../assets/default_profile_icon.png';
 import Up from '../../assets/chevron_up.png';
 import DeletePage from "../../page/DeletePage/delete";
+import DeleteColabPage from "../../page/DeleteColabPage/delete_colab";
 
 function NavBar({ funcionarios, quartos, reservas }) {
     const [userName, setUserName] = useState("");
@@ -11,6 +12,7 @@ function NavBar({ funcionarios, quartos, reservas }) {
     const [isRotated, setIsRotated] = useState(false);
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+    const [isDeleteColabModalVisible, setIsDeleteColabModalVisible] = useState(false);
     const navigate = useNavigate();
 
     const profileMenu = () => {
@@ -52,13 +54,22 @@ function NavBar({ funcionarios, quartos, reservas }) {
         setIsMenuVisible(false);
     };
 
+    const closeDeleteModal = () => {
+        setIsDeleteModalVisible(false);
+    };
+
+    const openDeleteColabModal = () => {
+        setIsDeleteColabModalVisible(true);
+        setIsMenuVisible(false);
+    };
+
+    const closeDeleteColabModal = () => {
+        setIsDeleteColabModalVisible(false);
+    };
+
     const closeSession = () => {
         localStorage.clear();
         navigate('/');
-    };
-
-    const closeDeleteModal = () => {
-        setIsDeleteModalVisible(false);
     };
 
     const shotDown = async () => {
@@ -107,7 +118,7 @@ function NavBar({ funcionarios, quartos, reservas }) {
                                     <p>Funcionários</p>
                                     <Link className="menu-item" to='/cadaster_colab'><li>Cadastrar funcionário</li></Link>
                                     <Link className="menu-item" to='/update_colab'><li>Atualizar funcionário</li></Link>
-                                    <Link className="menu-item" to='/delete_colab'><li>Deletar funcionário</li></Link>
+                                    <Link className="menu-item" onClick={openDeleteColabModal}><li>Deletar funcionário</li></Link>
                                     <p>Clientes</p>
                                     <Link className="menu-item" to='/cadaster'><li>Cadastrar cliente</li></Link>
                                     <Link className="menu-item" to='/update'><li>Atualizar cliente</li></Link>
@@ -120,6 +131,7 @@ function NavBar({ funcionarios, quartos, reservas }) {
                         ) : (
                             <div className="menu">
                                 <ul>
+                                    <p>Clientes</p>
                                     <Link className="menu-item" to='/cadaster'><li>Criar o cadastro</li></Link>
                                     <Link className="menu-item" to='/update'><li>Atualizar o cadastro</li></Link>
                                     <Link className="menu-item" onClick={openDeleteModal}><li>Deletar o cadastro</li></Link>
@@ -137,6 +149,10 @@ function NavBar({ funcionarios, quartos, reservas }) {
 
             {isDeleteModalVisible && (
                 <DeletePage closeModal={closeDeleteModal} />
+            )}
+
+            {isDeleteColabModalVisible && (
+                <DeleteColabPage closeModal={closeDeleteColabModal} />
             )}
         </div>
     );

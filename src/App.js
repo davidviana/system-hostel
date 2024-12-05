@@ -7,6 +7,7 @@ import ForgotPasswordPage from './page/ForgotPasswordPage/forgot';
 import UpdateCadasterPage from './page/UpdateCadasterPage/update_cadaster';
 import UpdateCadasterColabPage from './page/UpdateCadasterColabPage/update_cadaster_colab';
 import DeletePage from './page/DeletePage/delete';
+import DeleteColabPage from './page/DeleteColabPage/delete_colab';
 import ReservePage from './page/ReservePage/reserve';
 import RoomPage from './page/RoomPage/room';
 
@@ -41,6 +42,7 @@ function App() {
                     <Route path="/update" element={<UpdateCadasterPage />} />
                     <Route path="/update_colab" element={<UpdateCadasterColabPage />} />
                     <Route path="/delete" element={<DeletePage />} />
+                    <Route path="/delete_colab" element={<DeletePage />} />
                     <Route path="/reserve" element={<ReservePage />} />
                     <Route path="/room" element={<RoomPage />} />
                 </>
