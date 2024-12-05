@@ -17,6 +17,14 @@ function ReservePage() {
         return `${year}-${month}-${day}`;
     };
 
+    const calendarDate = (date) => {
+        if (!date) return '';
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+
     const [rooms, setRooms] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState(null);
@@ -86,8 +94,8 @@ function ReservePage() {
                     socket.close();
                 };
 
-                navigate('/home');
                 setIsModalOpen(false);
+                setTimeout(navigate('/home'), 3000)
             } else {
                 console.error("Erro ao fazer a reserva:", response.status);
             }
@@ -126,8 +134,10 @@ function ReservePage() {
                         <div id='modal-text-contente'>
                             <h3>Confirmar Reserva</h3>
                             <p>Você deseja prosseguir a reserva nas seguintes condições:</p>
-                            <p><b>Quarto:</b> {selectedRoom.numero} |  <b>Período:</b> {dias_de_estadia} dia(s)</p>
-                            <p><b>Valor Total:</b> R${price * dias_de_estadia},00 </p>
+                            <p><b>Quarto:</b> {selectedRoom.numero} |  <b>Período:</b> {dias_de_estadia === 0 || dias_de_estadia === 1 ? `1 dia` : `${dias_de_estadia} dias`}</p>
+                            <p>Entrada: {calendarDate(startDate)}</p>
+                            <p>Saída: {calendarDate(endDate)}</p>
+                            <p><b>Valor Total:</b> R${price * dias_de_estadia === 0 ? price * 1 : price * dias_de_estadia},00 </p>
                             <span id='alert'>* O pagamento ocorrerá no local, no momento do check-in</span>
                         </div>
                         <button onClick={handleConfirmReservation}>Confirmar</button>
