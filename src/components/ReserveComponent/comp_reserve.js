@@ -36,6 +36,13 @@ function ReserveComponent() {
             return;
         }
 
+        let dias_de_estadia = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+        if (dias_de_estadia > 14) {
+            alert("Por favor, insira um período até 14 dias")
+            return;
+        }
+
         navigate('/reserve', {
             state: { startDate, endDate, guestCount }
         });
