@@ -84,7 +84,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-// POST: Pegar só um cliente
+// POST: Pegar só um funcionario
 router.post('/check', async (req, res) => {
     const { document } = req.body;
 
