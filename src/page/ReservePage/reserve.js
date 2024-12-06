@@ -7,18 +7,16 @@ function ReservePage() {
     const [selectedRoom, setSelectedRoom] = useState(null);
 
     useEffect(() => {
-        // Conectar ao WebSocket
         const socket = new WebSocket('ws://localhost:3001');
-    
+
         socket.onopen = () => {
             console.log('Conexão WebSocket aberta');
         };
-    
-        // Quando uma mensagem for recebida do servidor WebSocket
+
         socket.onmessage = (event) => {
             const message = JSON.parse(event.data);
             console.log('Mensagem recebida do servidor WebSocket:', message);
-    
+
             if (message.type === 'reservationUpdate') {
                 console.log('Mensagem de atualização de reserva recebida', message);
                 setReserve((prevReserve) => {
@@ -45,18 +43,15 @@ function ReservePage() {
                 });
             }
         };
-    
-        // Quando a conexão WebSocket for fechada
+
         socket.onclose = () => {
             console.log('Conexão WebSocket fechada');
         };
-    
-        // Caso ocorra um erro no WebSocket
+
         socket.onerror = (error) => {
             console.error('Erro no WebSocket:', error);
         };
-    
-        // Buscar as reservas iniciais
+
         fetch(`http://localhost:3001/api/reserva/`, {
             method: 'GET',
             headers: {
@@ -66,12 +61,11 @@ function ReservePage() {
             .then(response => response.json())
             .then(data => setReserve(data))
             .catch(error => console.error('Erro ao buscar as reservas:', error));
-    
-        // Limpeza: Fechar a conexão WebSocket quando o componente for desmontado
+
         return () => {
             socket.close();
         };
-    }, []); // Dependência vazia garante que a configuração inicial seja feita apenas uma vez.
+    }, []);
 
     const formatDate = (date) => {
         if (!date) return '';
@@ -93,9 +87,47 @@ function ReservePage() {
         }
     };
 
+    const getCheckStatusClass = (status) => {
+        switch (status) {
+            case 'Realizado':
+                return 'status disponivel';
+            default:
+                return 'status ocupado';
+        }
+    };
+
     const handleRoomSelection = (room) => {
         setSelectedRoom(room);
-        setIsModalOpen(true);
+        if (room.is_checkin === true && room.is_checkout === false) {
+            setIsModalOpen(true);
+        } else if (room.is_checkin === false && room.is_checkout === false) {
+            setIsModalOpen(true);
+        }
+    };
+
+    const handleConfirmCheckOut = async () => {
+        if (!selectedRoom) return;
+
+        try {
+            const response = await fetch('http://localhost:3001/api/reserva/checkout', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    reserva_id: selectedRoom.id,
+                    room_number: selectedRoom.quarto_id,
+                }),
+            });
+
+            if (response.ok) {
+                setIsModalOpen(false);
+            } else {
+                console.error("Erro ao realizar o Check-Out:", response.status);
+            }
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+        }
     };
 
     const handleConfirmReservation = async () => {
@@ -114,8 +146,7 @@ function ReservePage() {
             });
 
             if (response.ok) {
-                console.log("Reserva confirmada com sucesso!");
-                setIsModalOpen(false); // Fecha o modal após confirmação
+                setIsModalOpen(false);
             } else {
                 console.error("Erro ao confirmar reserva:", response.status);
             }
@@ -140,7 +171,6 @@ function ReservePage() {
             });
 
             if (response.ok) {
-                console.log("Reserva cancelada com sucesso!");
                 setIsModalOpen(false);
             } else {
                 console.error("Erro ao confirmar reserva:", response.status);
@@ -148,6 +178,10 @@ function ReservePage() {
         } catch (error) {
             console.error("Erro na requisição:", error);
         }
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
     };
 
     return (
@@ -159,12 +193,13 @@ function ReservePage() {
                         <button
                             key={e.id}
                             className='room-card'
-                            onClick={() => handleRoomSelection(e)}
-                        >
+                            onClick={() => handleRoomSelection(e)}>
                             <h2>Reserva: {e.id}</h2>
                             <p>Status: <span className={getRoomStatusClass(e.status)}>{e.status}</span></p>
-                            <p>Check-In: {formatDate(e.data_checkin)}</p>
-                            <p>Check-Out: {formatDate(e.data_checkout)}</p>
+                            <p>Data de Entrada: {formatDate(e.data_checkin)}</p>
+                            <p>Data de Saída: {formatDate(e.data_checkout)}</p>
+                            <p>Check-In: <span className={getCheckStatusClass(String(e.is_checkin) === 'true' ? 'Realizado' : 'Não Realizado')}>{String(e.is_checkin) === 'true' ? 'Realizado' : 'Não Realizado'}</span></p>
+                            <p>Check-Out: <span className={getCheckStatusClass(String(e.is_checkout) === 'true' ? 'Realizado' : 'Não Realizado')}>{String(e.is_checkout) === 'true' ? 'Realizado' : 'Não Realizado'}</span></p>
                             <p>Quarto: {e.quarto_id}</p>
                         </button>
                     ))}
@@ -176,10 +211,23 @@ function ReservePage() {
             {isModalOpen && selectedRoom && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h3>Confirmar Reserva</h3>
-                        <p>Você deseja reservar o quarto {selectedRoom.quarto_id}?</p>
-                        <button onClick={handleConfirmReservation}>Confirmar</button>
-                        <button onClick={handleCancelReservation}>Cancelar</button>
+                        {selectedRoom.is_checkin === true && selectedRoom.is_checkout === false ? (
+                            <>
+                                <h3>Confirmar Check-Out</h3>
+                                <p>Você deseja realizar o Check-Out do quarto {selectedRoom.quarto_id}?</p>
+                                <button onClick={handleConfirmCheckOut}>Confirmar</button>
+                                <button onClick={handleCancelReservation}>Cancelar</button>
+                                <button onClick={closeModal}>Fechar</button>
+                            </>
+                        ) : (
+                            <>
+                                <h3>Confirmar Reserva</h3>
+                                <p>Você deseja realizar o Check-In no quarto {selectedRoom.quarto_id}?</p>
+                                <button onClick={handleConfirmReservation}>Confirmar</button>
+                                <button onClick={handleCancelReservation}>Cancelar</button>
+                                <button onClick={closeModal}>Fechar</button>
+                            </>
+                        )}
                     </div>
                 </div>
             )}
