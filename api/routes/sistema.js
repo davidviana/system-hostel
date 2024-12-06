@@ -3,6 +3,10 @@ const router = express.Router();
 
 router.use(express.json());
 
+router.get('/running', (req, res) => {
+    res.status(200).send({ status: 'API is up and running!' });
+});
+
 router.post('/', (req, res) => {
     const { role } = req.body;
 
