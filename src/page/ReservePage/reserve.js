@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './reserve.css';
 
 function ReservePage() {
-    const [reserve, setReserve] = useState([]);
+    const [reserveToday, setReserveToday] = useState([]);
+    const [reserveFuture, setReserveFuture] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState(null);
 
@@ -19,7 +20,7 @@ function ReservePage() {
 
             if (message.type === 'reservationUpdate') {
                 console.log('Mensagem de atualização de reserva recebida', message);
-                setReserve((prevReserve) => {
+                setReserveToday((prevReserve) => {
                     console.log('Estado anterior:', prevReserve);
                     if (message.status === 'created') {
                         return [
@@ -59,13 +60,31 @@ function ReservePage() {
             }
         })
             .then(response => response.json())
-            .then(data => setReserve(data))
+            .then(data => {
+                const today = new Date();
+                const todayFormatted = today.toISOString().split('T')[0]; // Ex: "2024-12-05"
+
+                const todayReservations = [];
+                const futureReservations = [];
+
+                data.forEach(reserva => {
+                    const reservaCheckin = reserva.data_checkin.split('T')[0]; // Formato da data de check-in: "2024-12-05"
+                    if (reservaCheckin === todayFormatted) {
+                        todayReservations.push(reserva);
+                    } else if (reservaCheckin > todayFormatted) {
+                        futureReservations.push(reserva);
+                    }
+                });
+
+                setReserveToday(todayReservations);
+                setReserveFuture(futureReservations);
+            })
             .catch(error => console.error('Erro ao buscar as reservas:', error));
 
         return () => {
             socket.close();
         };
-    }, []);
+    }, []); 
 
     const formatDate = (date) => {
         if (!date) return '';
@@ -186,14 +205,14 @@ function ReservePage() {
 
     return (
         <div>
-            <h2>Reservas Disponíveis</h2>
-            {reserve.length > 0 ? (
+            <h2>Reservas para Hoje</h2>
+            {reserveToday.length > 0 ? (
                 <div className="rooms-container">
-                    {reserve.map((e) => (
+                    {reserveToday.map((e) => (
                         <button
                             key={e.id}
                             className='room-card'
-                            onClick={() => handleRoomSelection(e)}>
+                            onClick={() => handleRoomSelection(e)} >
                             <h2>Reserva: {e.id}</h2>
                             <p>Status: <span className={getRoomStatusClass(e.status)}>{e.status}</span></p>
                             <p>Data de Entrada: {formatDate(e.data_checkin)}</p>
@@ -205,7 +224,29 @@ function ReservePage() {
                     ))}
                 </div>
             ) : (
-                <p>Nenhum quarto disponível para as datas selecionadas.</p>
+                <p>Nenhuma reserva para hoje.</p>
+            )}
+
+            <h2>Reservas Futura (Check-In Após Hoje)</h2>
+            {reserveFuture.length > 0 ? (
+                <div className="rooms-container">
+                    {reserveFuture.map((e) => (
+                        <button
+                            key={e.id}
+                            className='room-card'
+                            onClick={() => handleRoomSelection(e)} >
+                            <h2>Reserva: {e.id}</h2>
+                            <p>Status: <span className={getRoomStatusClass(e.status)}>{e.status}</span></p>
+                            <p>Data de Entrada: {formatDate(e.data_checkin)}</p>
+                            <p>Data de Saída: {formatDate(e.data_checkout)}</p>
+                            <p>Check-In: <span className={getCheckStatusClass(String(e.is_checkin) === 'true' ? 'Realizado' : 'Não Realizado')}>{String(e.is_checkin) === 'true' ? 'Realizado' : 'Não Realizado'}</span></p>
+                            <p>Check-Out: <span className={getCheckStatusClass(String(e.is_checkout) === 'true' ? 'Realizado' : 'Não Realizado')}>{String(e.is_checkout) === 'true' ? 'Realizado' : 'Não Realizado'}</span></p>
+                            <p>Quarto: {e.quarto_id}</p>
+                        </button>
+                    ))}
+                </div>
+            ) : (
+                <p>Nenhuma reserva futura.</p>
             )}
 
             {isModalOpen && selectedRoom && (
