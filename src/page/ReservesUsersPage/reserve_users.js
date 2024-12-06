@@ -58,8 +58,10 @@ function ReserveUsersPage() {
                         <div className='room-card' key={room.id}>
                             <h2>Reserva: {room.id}</h2>
                             <p>Status: <span className={getRoomStatusClass(room.status)}>{room.status}</span></p>
+                            <p>Quarto: {room.quarto_id}</p>
                             <p>Check-In: {formatDate(room.data_checkin)}</p>
                             <p>Check-Out: {formatDate(room.data_checkout)}</p>
+                            <p>Valor Total: R${room.total_value},00</p>
                         </div>
                     ))}
                 </div>
