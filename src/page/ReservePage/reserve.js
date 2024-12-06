@@ -3,11 +3,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './reserve.css';
 
 function ReservePage() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const location = useLocation();
     const { startDate, endDate, guestCount } = location.state || {};
-    const [price, setPrice] = useState()
-    let dias_de_estadia = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+    const [price, setPrice] = useState();
+    const dias_de_estadia = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+    const total_value = price * dias_de_estadia === 0 ? price * 1 : price * dias_de_estadia;
 
     const formatDate = (date) => {
         if (!date) return '';
@@ -37,7 +38,10 @@ function ReservePage() {
             }
         })
             .then(response => response.json())
-            .then(data => setRooms(data))
+            .then(data => {
+                const filteredRooms = data.filter(room => room.maximo_pessoas >= guestCount);
+                setRooms(filteredRooms);
+            })
             .catch(error => console.error('Erro ao buscar quartos:', error));
     }, [startDate, endDate, guestCount]);
 
@@ -54,18 +58,17 @@ function ReservePage() {
 
     const handleRoomSelection = (room) => {
         setSelectedRoom(room);
-        setPrice(room.preco)
+        setPrice(room.preco);
         setIsModalOpen(true);
     };
 
     const handleConfirmReservation = async (e) => {
         let date = new Date();
-        var date_reserva = formatDate(date);
-
-        var data_checkin = formatDate(startDate);
-        var data_checkout = formatDate(endDate);
-        let cliente_id = localStorage.getItem("userId");
-        let room_number = selectedRoom.numero;
+        const date_reserva = formatDate(date);
+        const data_checkin = formatDate(startDate);
+        const data_checkout = formatDate(endDate);
+        const cliente_id = localStorage.getItem("userId");
+        const room_number = selectedRoom.numero;
 
         try {
             const response = await fetch('http://localhost:3001/api/reserva/', {
@@ -73,12 +76,10 @@ function ReservePage() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ date_reserva, data_checkin, data_checkout, cliente_id, room_number, dias_de_estadia }),
+                body: JSON.stringify({ date_reserva, data_checkin, data_checkout, cliente_id, room_number, dias_de_estadia, total_value }),
             });
 
             if (response.ok) {
-                console.log("Reserva realizada com sucesso!");
-
                 const socket = new WebSocket('ws://localhost:3001');
                 socket.onopen = () => {
                     const message = {
@@ -95,7 +96,7 @@ function ReservePage() {
                 };
 
                 setIsModalOpen(false);
-                setTimeout(navigate('/home'), 3000)
+                setTimeout(() => navigate('/home'), 3000);
             } else {
                 console.error("Erro ao fazer a reserva:", response.status);
             }
@@ -128,12 +129,12 @@ function ReservePage() {
                 <p>Nenhum quarto disponível para as datas selecionadas.</p>
             )}
 
-            {isModalOpen && (
+            {isModalOpen && selectedRoom && (
                 <div className="modal">
                     <div className="modal-content">
                         <div id='modal-text-contente'>
                             <h3>Confirmar Reserva</h3>
-                            <p>Você deseja prosseguir a reserva nas seguintes condições:</p>
+                            <p>Você deseja prosseguir com a reserva nas seguintes condições:</p>
                             <p><b>Quarto:</b> {selectedRoom.numero} |  <b>Período:</b> {dias_de_estadia === 0 || dias_de_estadia === 1 ? `1 dia` : `${dias_de_estadia} dias`}</p>
                             <p>Entrada: {calendarDate(startDate)}</p>
                             <p>Saída: {calendarDate(endDate)}</p>
