@@ -12,21 +12,48 @@ import { useEffect, useState } from 'react';
 
 function App() {
     const [isLogged, setIsLogged] = useState(false);
-    const navegate = useNavigate()
+    const navigate = useNavigate();
+
+    const checkApiStatus = async () => {
+        try {
+            const response = await fetch('http://localhost:3001/api/shutdown/running');
+            if (response.status === 200) {
+                console.log('API is running');
+                return true;
+            } else {
+                throw new Error('API not running');
+            }
+        } catch (error) {
+            console.error('API check failed:', error);
+            localStorage.clear(); // Limpa o localStorage
+            navigate('/'); // Redireciona para a tela de login
+            return false;
+        }
+    };
 
     useEffect(() => {
-        const loginTime = localStorage.getItem('loginTime');
-        const currentTime = Date.now();
-        const TEN_MINUTES = 10 * 60 * 1000;
+        const validateSession = async () => {
+            const loginTime = localStorage.getItem('loginTime');
+            const currentTime = Date.now();
+            const TEN_MINUTES = 10 * 60 * 1000;
 
-        if (loginTime && (currentTime - loginTime) < TEN_MINUTES) {
-            setIsLogged(true);
-        } else {
-            localStorage.removeItem('isLogged');
-            localStorage.removeItem('loginTime');
-            navegate('/')
-        }
-    }, []);
+            if (loginTime && currentTime - loginTime < TEN_MINUTES) {
+                const isApiRunning = await checkApiStatus(); // Verifica a API
+                if (isApiRunning) {
+                    setIsLogged(true);
+                } else {
+                    setIsLogged(false);
+                    localStorage.clear();
+                    navigate('/');
+                }
+            } else {
+                localStorage.clear();
+                navigate('/');
+            }
+        };
+
+        validateSession();
+    }, [navigate]);
 
     return (
         <Routes>
